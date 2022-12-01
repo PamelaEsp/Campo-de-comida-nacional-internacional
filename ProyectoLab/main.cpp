@@ -344,7 +344,8 @@ int main()
 	dirtTexture.LoadTextureA();
 	plainTexture = Texture("Textures/plain.png");
 	plainTexture.LoadTextureA();
-	pisoTexture = Texture("Textures/piso.tga");
+	pisoTexture = Texture("Textures/piso_pasto_skybox2.tga");
+
 	pisoTexture.LoadTextureA();
 	AgaveTexture = Texture("Textures/Agave.tga");
 	AgaveTexture.LoadTextureA();
@@ -361,12 +362,29 @@ int main()
 
 
 	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
+	/*skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_dn.tga");
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_up.tga");
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_bk.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");
+	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");*/
+
+	// FIXME: Eliminar canales alpha de las imagenes
+	//skyboxFaces.push_back("Textures/Skybox/dia/dia_lt.tga");
+	//skyboxFaces.push_back("Textures/Skybox/dia/dia_rt.tga");
+	//skyboxFaces.push_back("Textures/Skybox/dia/dia_dn.tga");
+	//skyboxFaces.push_back("Textures/Skybox/dia/dia_up.tga");
+	//skyboxFaces.push_back("Textures/Skybox/dia/dia_bk.tga");
+	//skyboxFaces.push_back("Textures/Skybox/dia/dia_ft.tga");
+
+	skyboxFaces.push_back("Textures/Skybox/noche/lt.tga");
+	skyboxFaces.push_back("Textures/Skybox/noche/rt.tga");
+	skyboxFaces.push_back("Textures/Skybox/noche/down.tga");
+	skyboxFaces.push_back("Textures/Skybox/noche/up.tga");
+	skyboxFaces.push_back("Textures/Skybox/noche/back.tga");
+	skyboxFaces.push_back("Textures/Skybox/noche/front.tga");
+
+
 
 	skybox = Skybox(skyboxFaces);
 
