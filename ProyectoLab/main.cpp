@@ -81,6 +81,8 @@ Model Camino_M;
 Model Blackhawk_M;
 Model Dado_M;
 
+Model Stage_M;
+
 Skybox skybox;
 std::vector<std::string> skyboxDayFaces, skyboxNightFaces;
 
@@ -388,6 +390,9 @@ int main()
 	Camino_M = Model();
 	Camino_M.LoadModel("Models/railroad track.obj");
 
+	Stage_M = Model();
+	Stage_M.LoadModel("Models/stage_clean.obj");
+
 	/*
 		TODO: Implement the day and night cycle using a flag in the window object
 
@@ -644,6 +649,11 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		Blackhawk_M.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Stage_M.RenderModel();
 
 
 		//color = glm::vec3(1.0f, 1.0f, 1.0f);
