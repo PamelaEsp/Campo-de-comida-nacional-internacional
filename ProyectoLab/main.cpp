@@ -20,6 +20,9 @@ Animación:
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 #include <gtc\type_ptr.hpp>
+#include <chrono>  // for high_resolution_clock
+#include "addons.h"
+
 //para probar el importer
 //#include<assimp/Importer.hpp>
 
@@ -39,6 +42,12 @@ Animación:
 #include "SpotLight.h"
 #include "Material.h"
 const float toRadians = 3.14159265f / 180.0f;
+
+// PROJECT SETUP
+const int DAY_DURATION = 10; // Seconds
+std::chrono::steady_clock::time_point start_time;
+
+
 
 //variables para animación
 float movCoche;
@@ -72,7 +81,11 @@ Model Camino_M;
 Model Blackhawk_M;
 Model Dado_M;
 
+Model Stage_M;
+
 Skybox skybox;
+std::vector<std::string> skyboxDayFaces, skyboxNightFaces;
+
 
 //materiales
 Material Material_brillante;
@@ -325,7 +338,24 @@ void animate(void)
 /* FIN KEYFRAMES*/
 
 
+bool checkTime(std::chrono::steady_clock::time_point start, bool day_state) {
+	// Revisamos si el número de segundos ya supero el limite
+	float diff = getSecondsDiff(start);
+	//printf("The diff is %i\n", diff);
 
+	if (diff >= DAY_DURATION)
+	{
+		if (day_state)
+		{
+			skybox = Skybox(skyboxNightFaces);
+		}
+		else {
+			skybox = Skybox(skyboxDayFaces);
+		}
+		return true;
+	}
+	return false;
+}
 
 
 int main()
@@ -344,7 +374,8 @@ int main()
 	dirtTexture.LoadTextureA();
 	plainTexture = Texture("Textures/plain.png");
 	plainTexture.LoadTextureA();
-	pisoTexture = Texture("Textures/piso.tga");
+	pisoTexture = Texture("Textures/piso_pasto_skybox2.tga");
+
 	pisoTexture.LoadTextureA();
 	AgaveTexture = Texture("Textures/Agave.tga");
 	AgaveTexture.LoadTextureA();
@@ -359,16 +390,40 @@ int main()
 	Camino_M = Model();
 	Camino_M.LoadModel("Models/railroad track.obj");
 
+	Stage_M = Model();
+	Stage_M.LoadModel("Models/stage_clean.obj");
 
-	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
+	/*
+		TODO: Implement the day and night cycle using a flag in the window object
+
+		Duration max 2m
+	*/
+
+	/*skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_dn.tga");
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_up.tga");
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_bk.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");
+	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");*/
 
-	skybox = Skybox(skyboxFaces);
+	// FIXME: Eliminar canales alpha de las imagenes
+	skyboxDayFaces.push_back("Textures/Skybox/dia/dia_lt.tga");
+	skyboxDayFaces.push_back("Textures/Skybox/dia/dia_rt.tga");
+	skyboxDayFaces.push_back("Textures/Skybox/dia/dia_dn.tga");
+	skyboxDayFaces.push_back("Textures/Skybox/dia/dia_up.tga");
+	skyboxDayFaces.push_back("Textures/Skybox/dia/dia_bk.tga");
+	skyboxDayFaces.push_back("Textures/Skybox/dia/dia_ft.tga");
+
+	skyboxNightFaces.push_back("Textures/Skybox/noche/lt.tga");
+	skyboxNightFaces.push_back("Textures/Skybox/noche/rt.tga");
+	skyboxNightFaces.push_back("Textures/Skybox/noche/down.tga");
+	skyboxNightFaces.push_back("Textures/Skybox/noche/up.tga");
+	skyboxNightFaces.push_back("Textures/Skybox/noche/back.tga");
+	skyboxNightFaces.push_back("Textures/Skybox/noche/front.tga");
+
+
+
+	skybox = Skybox(skyboxDayFaces);
 
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
@@ -405,11 +460,6 @@ int main()
 		1.0f, 0.0f, 0.0f,
 		15.0f);
 	spotLightCount++;
-
-	//luz de helicóptero
-
-	//luz de faro
-
 
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
@@ -451,11 +501,7 @@ int main()
 
 
 	//Agregar Kefyrame[5] para que el avión regrese al inicio
-
-
-
-
-
+	start_time = std::chrono::high_resolution_clock::now();
 
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
@@ -464,6 +510,14 @@ int main()
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
+
+		// Revisar si es de dia o de noche
+		if (checkTime(start_time, mainWindow.isDay()))
+		{
+			start_time = std::chrono::high_resolution_clock::now();
+			mainWindow.toggleDay();
+		}
+
 
 		if (avanza)
 		{
@@ -595,6 +649,11 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		Blackhawk_M.RenderModel();
+
+		model = glm::mat4(1.0);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Stage_M.RenderModel();
 
 
 		//color = glm::vec3(1.0f, 1.0f, 1.0f);

@@ -14,6 +14,9 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	width = windowWidth;
 	height = windowHeight;
 	muevex = 2.0f;
+
+	day_state = true;
+
 	for (size_t i = 0; i < 1024; i++)
 	{
 		keys[i] = 0;
@@ -93,8 +96,13 @@ GLfloat Window::getYChange()
 	return theChange;
 }
 
+bool Window::isDay() {
+	return day_state;
+}
 
-
+void Window::toggleDay() {
+	day_state = not day_state;
+}
 
 void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode)
 {
