@@ -51,6 +51,12 @@ void SpotLight::SetPos(glm::vec3 pos)
 	position = pos;
 }
 
+//Funcion para colocar la intensidad de luminosidad
+void SpotLight::SetIntensity(GLfloat intensidad)
+{
+	diffuseIntensity = intensidad;
+}
+
 SpotLight::~SpotLight()
 {
 }
