@@ -44,6 +44,13 @@ void Camera::keyControl(bool* keys, GLfloat deltaTime)
 	{
 		position += right * velocity;
 	}
+
+	// Limit the user from going under the plane
+	if (position.y <= 0.0f)
+	{
+		position.y = 0.1f;
+	}
+
 }
 
 void Camera::mouseControl(GLfloat xChange, GLfloat yChange)
@@ -88,8 +95,8 @@ void Camera::update()
 {
 	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-
 	front.y = sin(glm::radians(pitch));
+	
 	//front.y = 0.0f; // Restrict the user from lookinng up and back
 	
 	front = glm::normalize(front);

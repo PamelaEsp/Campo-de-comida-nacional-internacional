@@ -16,7 +16,9 @@ public:
 		GLfloat constantLocation, GLfloat linearLocation, GLfloat exponentLocation);
 
 	~PointLight();
-	void SetIntensity(GLfloat intensidad);
+	void setIntensity(GLfloat intensidad);
+	glm::vec3 getPosition();
+	GLfloat getIntensity();
 
 protected:
 	glm::vec3 position;

@@ -35,7 +35,7 @@ Animación:
 #include "Camera.h"
 #include "Texture.h"
 #include "Sphere.h"
-#include"Model.h"
+#include "Model.h"
 #include "Skybox.h"
 
 //para iluminación
@@ -103,7 +103,7 @@ GLfloat lastTime = 0.0f;
 static double limitFPS = 1.0 / 60.0;
 
 // luz direccional
-DirectionalLight mainLight;
+DirectionalLight sunLight;
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
@@ -431,36 +431,46 @@ int main()
 
 
 	//luz direccional, sólo 1 y siempre debe de existir
-	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-		0.3f, 0.3f,
-		0.0f, 0.0f, -1.0f);
+	// ### SUN Light ###
+	sunLight = DirectionalLight(
+		1.0f, 1.0f, 1.0f,	// COLOR
+		0.8f, 0.3f,			// AmbientIntensity / DifusseIntensity
+		0.0f, 0.0f, -1.0f); // Direction
+
+
+	/* TODO: Cada farola tendra un pointLight que debera encender y apagarse*/
+	//float aIntensity = getAttenuationValue(1.0f, 0.014f, 0.0007f, 325.0f);
+
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
-	//Declaración de primer luz puntual
-	pointLights[0] = PointLight(1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f,
-		0.0f, 2.5f, 1.5f,
-		0.3f, 0.2f, 0.1f);
+	// Farola
+	pointLights[0] = PointLight(
+		1.0f, 1.0f, 0.4f,	// R G B
+		//1.0f, 0.0f, 0.0f,
+		1.0f, 1.0f,	// AmbientIntenssity / diffuseIntensity
+		0.0f, 3.0f, 0.0f,	// Position
+		0.3f, 0.2f, 0.1f);	// Contant, linar, exponent
 	pointLightCount++;
 
+	
 	unsigned int spotLightCount = 0;
 	//linterna
-	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
+	/*spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
 		0.0f, 2.0f,
 		0.0f, 0.0f, 0.0f,
 		0.0f, -1.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
 		5.0f);
-	spotLightCount++;
+	spotLightCount++;*/
 
 	//luz fija
-	spotLights[1] = SpotLight(0.0f, 0.0f, 1.0f,
+	/*spotLights[1] = SpotLight(0.0f, 0.0f, 1.0f,
 		1.0f, 2.0f,
 		5.0f, 10.0f, 0.0f,
 		0.0f, -5.0f, 0.0f,
 		1.0f, 0.0f, 0.0f,
 		15.0f);
-	spotLightCount++;
+	spotLightCount++;*/
 
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
@@ -469,7 +479,7 @@ int main()
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 
 	movCoche = 0.0f;
-	movOffset = 0.001f;
+	movOffset = 0.001f ;
 	rotllanta = 0.0f;
 	rotllantaOffset = 5.0f;
 	avanza = true;
@@ -518,12 +528,23 @@ int main()
 			mainWindow.toggleDay();
 		}
 
+		// ### Day && Night Mode ###
+		if (mainWindow.isDay())
+		{
+			// # Day Mode #
+
+			sunLight.setAmbientIntenssity(0.8f);
+		}
+		else {
+			// # Night Mode #
+			sunLight.setAmbientIntenssity(0.3f);
+
+		}
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
 
 		
-
 		// TODO: Revisar el modo de camara activo (3rd person or isometric)
 		if (mainWindow.getCameraMode()) {
 			// 3rd Person Mode
@@ -537,8 +558,28 @@ int main()
 			camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 		}
 
-		// TODO: Revisar si L se presiono y en caso de haber sido presionado, revisar que luz debe ser prendida/apagada
-		
+		bool* keys = mainWindow.getsKeys();
+
+		// ### Luz de las Farolas ###
+		if (keys[GLFW_KEY_V])  // Disable nearest pointlight
+		{
+			int nearestIndex = getNearestLightIndex(pointLights, pointLightCount, tux.getPos());
+			//printf("Nearest index is: %d\n", nearestIndex);
+
+			if (pointLights[nearestIndex].getIntensity() > 0.0f) {
+				pointLights[nearestIndex].setIntensity(0.0f);
+			}
+		}
+
+		if (keys[GLFW_KEY_B])  // Enable nearest pointlight
+		{
+			int nearestIndex = getNearestLightIndex(pointLights, pointLightCount, tux.getPos());
+			//printf("Nearest index is: %d\n", nearestIndex);
+
+			if (pointLights[nearestIndex].getIntensity() <= 0.0f) {
+				pointLights[nearestIndex].setIntensity(1.0f);
+			}
+		}
 
 		//para keyframes
 		inputKeyframes(mainWindow.getsKeys());
@@ -566,12 +607,12 @@ int main()
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
 		// luz ligada a la cámara de tipo flash
-		glm::vec3 lowerLight = camera.getCameraPosition();
-		lowerLight.y -= 0.3f;
-		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
+		//glm::vec3 lowerLight = camera.getCameraPosition();
+		//lowerLight.y -= 0.3f;
+		//spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 
 		//información al shader de fuentes de iluminación
-		shaderList[0].SetDirectionalLight(&mainLight);
+		shaderList[0].SetDirectionalLight(&sunLight);
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 

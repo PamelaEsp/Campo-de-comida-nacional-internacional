@@ -17,6 +17,7 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 
 	day_state = true;
 	camera_mode = true;
+	pointLightsButtonPress = false;
 
 	for (size_t i = 0; i < 1024; i++)
 	{
@@ -130,17 +131,6 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	}
 
 
-	//if (key == GLFW_KEY_Y)
-	//{
-	//	theWindow-> muevex += 1.0;
-	//}
-	//if (key == GLFW_KEY_U)
-	//{
-	//	theWindow-> muevex -= 1.0;
-	//}
-
-
-
 	if (key >= 0 && key < 1024)
 	{
 		if (action == GLFW_PRESS)
@@ -148,12 +138,26 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 			theWindow->keys[key] = true;
 			//printf("se presiono la tecla %d'\n", key);
 		}
-		else if (action == GLFW_RELEASE)
+		
+		if (action == GLFW_RELEASE)
 		{
 			theWindow->keys[key] = false;
 			//printf("se solto la tecla %d'\n", key);
 		}
 	}
+
+	if (action == GLFW_PRESS && key == GLFW_KEY_N)
+	{
+		theWindow->toggleDay();
+	}
+
+	/*if (action == GLFW_PRESS && key == GLFW_KEY_T)
+	{
+		theWindow->pointLightsButtonPress += 1;
+	}
+	else {
+		theWindow->pointLightsButtonPress = 0;
+	}*/
 }
 
 void Window::ManejaMouse(GLFWwindow* window, double xPos, double yPos)
