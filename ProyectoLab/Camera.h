@@ -20,10 +20,12 @@ public:
 	glm::vec3 getCameraDirection();
 	glm::mat4 calculateViewMatrix();
 
+	void adjustCamera(glm::vec3 tuxPos, glm::vec3 tuxDir, glm::vec3 tuxWorldUp);
+
 	~Camera();
 
 private:
-	glm::vec3 position;
+	glm::vec3 position, tuxPosition;
 	glm::vec3 front;
 	glm::vec3 up;
 	glm::vec3 right;

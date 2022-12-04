@@ -16,6 +16,7 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	muevex = 2.0f;
 
 	day_state = true;
+	camera_mode = true;
 
 	for (size_t i = 0; i < 1024; i++)
 	{
@@ -104,6 +105,10 @@ void Window::toggleDay() {
 	day_state = not day_state;
 }
 
+void Window::setCameraMode(bool mode) {
+	camera_mode = mode;
+}
+
 void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode)
 {
 	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
@@ -112,14 +117,26 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
-	if (key == GLFW_KEY_Y)
+
+	if (key == GLFW_KEY_C)
 	{
-		theWindow-> muevex += 1.0;
+		theWindow->setCameraMode(true);
 	}
-	if (key == GLFW_KEY_U)
+
+	if (key == GLFW_KEY_I)
 	{
-		theWindow-> muevex -= 1.0;
+		theWindow->setCameraMode(false);
 	}
+
+
+	//if (key == GLFW_KEY_Y)
+	//{
+	//	theWindow-> muevex += 1.0;
+	//}
+	//if (key == GLFW_KEY_U)
+	//{
+	//	theWindow-> muevex -= 1.0;
+	//}
 
 
 

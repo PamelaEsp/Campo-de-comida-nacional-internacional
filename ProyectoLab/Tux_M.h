@@ -18,8 +18,16 @@ const float STEP_INC = 1.0f;
 class Tux_M
 {
 	private:
-		glm::vec3 pos;
-		glm::vec3 dir;
+
+		// ### MOVEMENT ###
+		glm::vec3 pos; // Donde está
+		glm::vec3 front; // hacia donde apunta
+		glm::vec3 worldUp, right, up;
+		GLfloat yaw;
+		GLfloat pitch;
+		GLfloat moveSpeed;
+		GLfloat turnSpeed;
+
 
 		Model body_M, larm_M, rarm_M, lfoot_M, rfoot_M;
 
@@ -30,25 +38,27 @@ class Tux_M
 		float right_foot_ang;
 
 		bool larm_d, rarm_d;
+		void update();
 
 	public:
-		Tux_M(std::string body_model,
+		Tux_M(
+			glm::vec3 startingPosition,
+			std::string body_model,
 			std::string left_arm_model,
 			std::string right_arm_model,
 			std::string left_foot_model,
-			std::string right_foot_model);
+			std::string right_foot_model
+		);
+
+		void keyControl(bool* keys, GLfloat deltaTime);
+		void mouseControl(GLfloat xChange, GLfloat yChange);
+
+		glm::vec3 getPos() { return pos; };
+		glm::vec3 getDir() { return front; };
+		glm::vec3 getWorldUp() { return worldUp; };
+
 		void walkAnimation();
 		void draw(GLuint uniformModel);
 		void move(glm::vec3 &newPos, glm::vec3 &newDir, GLuint &uniformModel);
-			/*
-				Recibir un vector de pocisión y otro de sentido, el cua está ligado a la
-				camara, esto para hacer las traslaciones correspondientes.
-
-				Para cada movimiento que se realice se debe redibujar el modelo.
-			*/
-
-			// trasladar a newPos
-			// incrementar animación de caminar
-			// 
 };
 

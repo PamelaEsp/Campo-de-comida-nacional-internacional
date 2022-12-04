@@ -22,6 +22,9 @@ public:
 	bool isDay();
 	void toggleDay();
 
+	bool getCameraMode() { return camera_mode; };
+	void setCameraMode(bool mode);
+
 	~Window();
 private: 
 	GLFWwindow *mainWindow;
@@ -35,7 +38,8 @@ private:
 	GLfloat yChange;
 	GLfloat muevex;
 
-	bool day_state;  
+	bool day_state;
+	bool camera_mode; // true: 3rd person, false: isometric mode
 
 	bool mouseFirstMoved;
 	static void ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode);

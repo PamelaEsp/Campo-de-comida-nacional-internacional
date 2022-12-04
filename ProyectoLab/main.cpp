@@ -402,6 +402,7 @@ int main()
 	Test_M.LoadModel("Models/tux/body.obj");
 
 	Tux_M tux = Tux_M(
+		glm::vec3(0.0f),
 		"Models/tux/body.obj", // body
 		"Models/tux/larm.obj",
 		"Models/tux/rarm.obj",
@@ -536,42 +537,23 @@ int main()
 		}
 
 
-		if (avanza)
-		{
-			if (movCoche < 301.0f)
-			{
-				movCoche -= movOffset * deltaTime;
-				//printf("avanza%f \n ",movCoche);
-
-			}
-			if (movCoche < -300.0f)
-			{
-				avanza = false;
-			}
-		}
-		else
-		{
-			if (movCoche < 300.0f)
-			{
-				movCoche += movOffset * deltaTime;
-
-			}
-			else
-			{
-				//printf("entro");
-				avanza = true;
-			}
-
-		}
-
-
-		rotllanta += rotllantaOffset * deltaTime;
-
-
 		//Recibir eventos del usuario
 		glfwPollEvents();
-		camera.keyControl(mainWindow.getsKeys(), deltaTime);
-		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+
+		// TODO: manejar las teclas con TUX
+		tux.keyControl(mainWindow.getsKeys(), deltaTime);
+		tux.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+
+		// TODO: Revisar el modo de camara activo (3rd person or isometric)
+		if (mainWindow.getCameraMode()) {
+			// 3rd Person Mode
+			camera.adjustCamera(tux.getPos(), tux.getDir(), tux.getWorldUp());
+		}
+		else {
+			// Isometric Mode
+		}
+		/*camera.keyControl(mainWindow.getsKeys(), deltaTime);
+		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());*/
 
 		//para keyframes
 		inputKeyframes(mainWindow.getsKeys());
