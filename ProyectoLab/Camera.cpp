@@ -120,7 +120,7 @@ void Camera::update()
 void Camera::adjustCamera(glm::vec3 tuxPos, glm::vec3 tuxDir, glm::vec3 tuxWorldUp) {
 	/*Calculamos la posición y sentido de la camara a partir de la pocisión del objeto*/
 
-	float scale = 10.0f;
+	float scale = 4.0f;
 
 	position = tuxPos - scale * tuxDir;
 	// NOTE: Utilizamos tuxDir por que es la misma dirección a la que debe apuntar la cámara

@@ -27,6 +27,7 @@ class Tux_M
 		GLfloat pitch;
 		GLfloat moveSpeed;
 		GLfloat turnSpeed;
+		GLfloat rotation_angle;
 
 
 		Model body_M, larm_M, rarm_M, lfoot_M, rfoot_M;
@@ -37,7 +38,7 @@ class Tux_M
 		float left_foot_ang;
 		float right_foot_ang;
 
-		bool larm_d, rarm_d;
+		bool larm_d, rfoot_d;
 		void update();
 
 	public:
@@ -59,6 +60,6 @@ class Tux_M
 
 		void walkAnimation();
 		void draw(GLuint uniformModel);
-		void move(glm::vec3 &newPos, glm::vec3 &newDir, GLuint &uniformModel);
+		void move(GLuint &uniformModel);
 };
 

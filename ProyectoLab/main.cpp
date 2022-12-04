@@ -625,10 +625,10 @@ int main()
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		// Stage_M.RenderModel();
 
-		glm::vec3 pos = camera.getCameraPosition();
-		glm::vec3 dir = camera.getCameraDirection();
+		/*glm::vec3 pos = camera.getCameraPosition();
+		glm::vec3 dir = camera.getCameraDirection();*/
 
-		tux.move(pos, dir, uniformModel);
+		tux.move(uniformModel);
 
 
 		glUseProgram(0);
