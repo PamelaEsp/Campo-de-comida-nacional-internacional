@@ -376,19 +376,19 @@ int main()
 	plainTexture.LoadTextureA();
 	pisoTexture = Texture("Textures/piso_pasto_skybox2.tga");
 
-	pisoTexture.LoadTextureA();
-	AgaveTexture = Texture("Textures/Agave.tga");
-	AgaveTexture.LoadTextureA();
-	FlechaTexture = Texture("Textures/flechas.tga");
-	FlechaTexture.LoadTextureA();
-	Kitt_M = Model();
-	Kitt_M.LoadModel("Models/kitt_optimizado.obj");
-	Llanta_M = Model();
-	Llanta_M.LoadModel("Models/k_rueda.3ds");
-	Blackhawk_M = Model();
-	Blackhawk_M.LoadModel("Models/uh60.obj");
-	Camino_M = Model();
-	Camino_M.LoadModel("Models/railroad track.obj");
+	//pisoTexture.LoadTextureA();
+	//AgaveTexture = Texture("Textures/Agave.tga"); //QUITAR
+	//AgaveTexture.LoadTextureA();
+	//FlechaTexture = Texture("Textures/flechas.tga");//QUITAR
+	//FlechaTexture.LoadTextureA();
+	//Kitt_M = Model();
+	//Kitt_M.LoadModel("Models/kitt_optimizado.obj");//QUITAR
+	//Llanta_M = Model();
+	//Llanta_M.LoadModel("Models/k_rueda.3ds");//QUITAR
+	//Blackhawk_M = Model();
+	//Blackhawk_M.LoadModel("Models/uh60.obj");//QUITAR
+	//Camino_M = Model();
+	//Camino_M.LoadModel("Models/railroad track.obj");//QUITAR
 
 	Stage_M = Model();
 	Stage_M.LoadModel("Models/stage_clean.obj");
@@ -617,53 +617,15 @@ int main()
 		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Kitt_M.RenderModel();
-		model = modelaux;
-		model = glm::translate(model, glm::vec3(-1.0, -0.1f, 0.2f));
-		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.07f));
-		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, rotllanta * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		//Llanta_M.RenderModel();
+	
 
-
-		//model = glm::mat4(1.0);
-		//model = glm::translate(model, glm::vec3(0.0f+3*movCoche, 3.0f + 0.33*sin(glm::radians(rotllanta)), -1.0 ));
-		//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		//model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-		//model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		//Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		////color = glm::vec3(0.0f, 1.0f, 0.0f);
-		////glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		//Blackhawk_M.RenderModel();
-
-		model = glm::mat4(1.0);
-		posblackhawk = glm::vec3(posXavion + movAvion_x, posYavion + movAvion_y, posZavion);
-		model = glm::translate(model, posblackhawk);
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		model = glm::rotate(model, giroAvion * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		Blackhawk_M.RenderModel();
-
+		//-----------------------------------------------Escenario-------------------------------------------------------------------------------------------
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		Stage_M.RenderModel();
+		//---------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-		//color = glm::vec3(1.0f, 1.0f, 1.0f);
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, -1.53f, 0.0f));
-		model = glm::scale(model, glm::vec3(25.0f, 1.0f, 2.0f));
-
-		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Camino_M.RenderModel();
 
 		//Agave ¿qué sucede si lo renderizan antes del coche y de la pista?
 		model = glm::mat4(1.0);
@@ -678,27 +640,6 @@ int main()
 		meshList[3]->RenderMesh();
 
 
-		//textura con movimiento
-		//Importantes porque la variable uniform no podemos modificarla directamente
-		toffsetu += 0.001;
-		toffsetv += 0.001;
-		//para que no se desborde la variable
-		if (toffsetu > 1.0)
-			toffsetu = 0.0;
-		//if (toffsetv > 1.0)
-		//toffsetv = 0;
-		//printf("\ntfosset %f \n", toffsetu);
-		//pasar a la variable uniform el valor actualizado
-		toffset = glm::vec2(toffsetu, toffsetv);
-
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, 0.2f, -6.0f));
-		model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-
-		FlechaTexture.UseTexture();
 		//Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[4]->RenderMesh();
 		glDisable(GL_BLEND);
