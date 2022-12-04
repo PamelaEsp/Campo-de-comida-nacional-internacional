@@ -25,14 +25,6 @@ void Camera::keyControl(bool* keys, GLfloat deltaTime)
 {
 	GLfloat velocity = moveSpeed * deltaTime;
 
-	/*
-	Problema: Necesitamos llevar un control de la posición de:
-	 - Camara
-	 - Objeto (TUX)
-
-	
-	*/
-
 	if (keys[GLFW_KEY_W])
 	{
 		position += front * velocity;
@@ -94,21 +86,11 @@ glm::vec3 Camera::getCameraDirection()
 
 void Camera::update()
 {
-	/*
-	* Se actualiza el vector dirección de  a donde apunta la camara a partir de yaw & pitch
-	* 
-	* TODO: En lugar de calcular el front cada vez, se utiliza la pocisión del objeto
-	*/
-
-	// El vector dirección se debe obtener desde la pocisión de la camara y la del tux
-	// Calculo del vector dirección
-	
-
 	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 
-	//front.y = sin(glm::radians(pitch));
-	front.y = 0.0f; // Restrict the user from lookinng up and back
+	front.y = sin(glm::radians(pitch));
+	//front.y = 0.0f; // Restrict the user from lookinng up and back
 	
 	front = glm::normalize(front);
 

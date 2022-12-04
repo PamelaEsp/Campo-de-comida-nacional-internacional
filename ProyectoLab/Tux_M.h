@@ -59,7 +59,7 @@ class Tux_M
 		glm::vec3 getWorldUp() { return worldUp; };
 
 		void walkAnimation();
-		void draw(GLuint uniformModel);
+		//void draw(GLuint uniformModel);
 		void move(GLuint &uniformModel);
 };
 

@@ -109,6 +109,7 @@ void Window::setCameraMode(bool mode) {
 	camera_mode = mode;
 }
 
+
 void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode)
 {
 	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));

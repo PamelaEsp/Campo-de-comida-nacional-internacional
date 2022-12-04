@@ -35,6 +35,14 @@ Tux_M::Tux_M(
 	moveSpeed = 0.5f;
 	turnSpeed = 0.5f;
 
+	// Limit arms and foot movement
+	larm_d = true; // front
+	rfoot_d = true; // back
+	left_arm_ang = 0.0f;
+	right_arm_ang = 0.0f;
+	right_foot_ang = 0.0f;
+	left_foot_ang = 0.0f;
+
 	update();
 
 	// ### Carga de modelos ### 
@@ -45,15 +53,6 @@ Tux_M::Tux_M(
 	rfoot_M = Model();
 
 	rotation_angle = 0.0f;
-	
-	// Limit arms and foot movement
-	left_arm_ang = 0.0f;
-	right_arm_ang = -left_arm_ang;
-	larm_d = true; // front
-	rfoot_d = true; // back
-
-	right_foot_ang = 0.0f;
-	left_foot_ang = -right_foot_ang;
 
 	body_M.LoadModel(body_model);
 	larm_M.LoadModel(left_arm_model);
@@ -89,7 +88,6 @@ void Tux_M::walkAnimation() {
 		}
 	}
 
-	// FIXME: Pivot from rarm is the oppossite of larm, so the same ang aplies to both arms
 	right_arm_ang = left_arm_ang;
 
 	// Pie Derecho
@@ -117,29 +115,35 @@ void Tux_M::walkAnimation() {
 	}
 
 }
-void Tux_M::draw(GLuint uniformModel) {
-	glm::mat4 model = glm::mat4(1.0);
-	
-	//Transform all parts
-	model = glm::translate(model, pos);
-	/*
-	Rotar de acuerdo al angulo que exista entre el vector de dirección actual
-	y el nuevo.
-	*/
-	// model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-
-	//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	
-
-	body_M.RenderModel();
-}
+//void Tux_M::draw(GLuint uniformModel) {
+//	glm::mat4 model = glm::mat4(1.0);
+//	
+//	//Transform all parts
+//	model = glm::translate(model, pos);
+//	/*
+//	Rotar de acuerdo al angulo que exista entre el vector de dirección actual
+//	y el nuevo.
+//	*/
+//	// model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+//
+//	//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+//	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+//	
+//
+//	body_M.RenderModel();
+//}
 
 void Tux_M::keyControl(bool* keys, GLfloat deltaTime)
 {
 	// Calcula la posición del objeto a partir del vector dirección y hacia donde queremos ir
 	
 	GLfloat velocity = moveSpeed * deltaTime;
+
+	//if (keys[GLFW_KEY_X])  // Toggle a light according to its distance
+	//{
+	//	// FIXME: this is fired mutliple times while it must be called only once
+	//	printf("Pos: (%f, %f, %f)\n", pos.x, pos.y, pos.z);
+	//}
 
 	if (keys[GLFW_KEY_W])
 	{
@@ -171,7 +175,17 @@ void Tux_M::mouseControl(GLfloat xChange, GLfloat yChange)
 	xChange *= turnSpeed;
 	yChange *= turnSpeed;
 
+	/*Make rotation angle the actual yaw minus the old yaw*/
+
+	rotation_angle = yaw;
 	yaw += xChange;  // lados
+
+	rotation_angle = yaw - rotation_angle;
+	/*if (rotation_angle > 0.0f || rotation_angle < 0.0f)
+	{
+		printf("Rot Ang: %f\n", rotation_angle);
+		printf("yaw: %f\n", yaw);
+	}*/
 
 	// No permitimos movimientos de arriba abajo, por lo que pitch nunca se modifica
 	//pitch += yChange; // arriba abajo
@@ -216,17 +230,12 @@ void Tux_M::move(GLuint &uniformModel){
 	glm::mat4 model = glm::mat4(1.0);
 	glm::mat4 aux;
 	
-
 	model = glm::translate(model, glm::vec3(pos.x, -2.0f, pos.z));
-	//model *= glm::transpose(glm::lookAt(pos, pos + front, up));
-	/*
-	TODO: Rotar de acuerdo al angulo que exista entre el vector de dirección actual
-	y el nuevo.
-	*/
-
-	// TODO: Fix Tux to alway look at front, Rotate using Quaternions? 
-
 	model = glm::scale(model, glm::vec3(0.1f));
+	//model = glm::rotate(model, glm::radians(yaw), glm::vec3(pos.x, 1.0f,pos.z));
+	//model *= glm::transpose(glm::lookAt(pos, pos + front, up));
+	
+	// TODO: Fix Tux to alway look at front, Rotate using Quaternions? 
 	
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	body_M.RenderModel();

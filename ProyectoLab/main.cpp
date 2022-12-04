@@ -373,16 +373,16 @@ int main()
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.5f, 0.5f);
 
-	brickTexture = Texture("Textures/brick.png");
-	brickTexture.LoadTextureA();
-	dirtTexture = Texture("Textures/dirt.png");
-	dirtTexture.LoadTextureA();
-	plainTexture = Texture("Textures/plain.png");
-	plainTexture.LoadTextureA();
+	//brickTexture = Texture("Textures/brick.png");
+	//brickTexture.LoadTextureA();
+	//dirtTexture = Texture("Textures/dirt.png");
+	//dirtTexture.LoadTextureA();
+	//plainTexture = Texture("Textures/plain.png");
+	//plainTexture.LoadTextureA();
 	pisoTexture = Texture("Textures/piso_pasto_skybox2.tga");
 
 	pisoTexture.LoadTextureA();
-	AgaveTexture = Texture("Textures/Agave.tga");
+	/*AgaveTexture = Texture("Textures/Agave.tga");
 	AgaveTexture.LoadTextureA();
 	FlechaTexture = Texture("Textures/flechas.tga");
 	FlechaTexture.LoadTextureA();
@@ -393,13 +393,13 @@ int main()
 	Blackhawk_M = Model();
 	Blackhawk_M.LoadModel("Models/uh60.obj");
 	Camino_M = Model();
-	Camino_M.LoadModel("Models/railroad track.obj");
+	Camino_M.LoadModel("Models/railroad track.obj");*/
 
 	Stage_M = Model();
 	Stage_M.LoadModel("Models/stage_clean.obj");
 
-	Test_M = Model();
-	Test_M.LoadModel("Models/tux/body.obj");
+	/*Test_M = Model();
+	Test_M.LoadModel("Models/tux/body.obj");*/
 
 	Tux_M tux = Tux_M(
 		glm::vec3(0.0f),
@@ -410,21 +410,6 @@ int main()
 		"Models/tux/rfoot.obj"
 	);
 
-
-	/*
-		TODO: Implement the day and night cycle using a flag in the window object
-
-		Duration max 2m
-	*/
-
-	/*skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_dn.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_up.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_bk.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");*/
-
-	// FIXME: Eliminar canales alpha de las imagenes
 	skyboxDayFaces.push_back("Textures/Skybox/dia/dia_lt.tga");
 	skyboxDayFaces.push_back("Textures/Skybox/dia/dia_rt.tga");
 	skyboxDayFaces.push_back("Textures/Skybox/dia/dia_dn.tga");
@@ -438,8 +423,6 @@ int main()
 	skyboxNightFaces.push_back("Textures/Skybox/noche/up.tga");
 	skyboxNightFaces.push_back("Textures/Skybox/noche/back.tga");
 	skyboxNightFaces.push_back("Textures/Skybox/noche/front.tga");
-
-
 
 	skybox = Skybox(skyboxDayFaces);
 
@@ -493,7 +476,6 @@ int main()
 
 	glm::vec3 posblackhawk = glm::vec3(2.0f, 0.0f, 0.0f);
 	//KEYFRAMES DECLARADOS INICIALES
-
 	KeyFrame[0].movAvion_x = 0.0f;
 	KeyFrame[0].movAvion_y = 0.0f;
 	KeyFrame[0].giroAvion = 0;
@@ -540,20 +522,23 @@ int main()
 		//Recibir eventos del usuario
 		glfwPollEvents();
 
-		// TODO: manejar las teclas con TUX
-		tux.keyControl(mainWindow.getsKeys(), deltaTime);
-		tux.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+		
 
 		// TODO: Revisar el modo de camara activo (3rd person or isometric)
 		if (mainWindow.getCameraMode()) {
 			// 3rd Person Mode
+			tux.keyControl(mainWindow.getsKeys(), deltaTime);
+			tux.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 			camera.adjustCamera(tux.getPos(), tux.getDir(), tux.getWorldUp());
 		}
 		else {
 			// Isometric Mode
+			camera.keyControl(mainWindow.getsKeys(), deltaTime);
+			camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 		}
-		/*camera.keyControl(mainWindow.getsKeys(), deltaTime);
-		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());*/
+
+		// TODO: Revisar si L se presiono y en caso de haber sido presionado, revisar que luz debe ser prendida/apagada
+		
 
 		//para keyframes
 		inputKeyframes(mainWindow.getsKeys());
@@ -590,8 +575,6 @@ int main()
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
-
-
 		glm::mat4 model(1.0);
 		glm::mat4 modelaux(1.0);
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -605,7 +588,6 @@ int main()
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		pisoTexture.UseTexture();
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-
 		meshList[2]->RenderMesh();
 
 		//model = glm::mat4(1.0);
