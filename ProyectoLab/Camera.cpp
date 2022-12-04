@@ -4,11 +4,16 @@ Camera::Camera() {}
 
 Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLfloat startPitch, GLfloat startMoveSpeed, GLfloat startTurnSpeed)
 {
-	position = startPosition;
+	position = startPosition;  // Camera posision
+	position = glm::vec3(0.0f, 2.0f, -5.0f); // Viendo al tux desde atras
+	tuxPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+
 	worldUp = startUp;
-	yaw = startYaw;
-	pitch = startPitch;
-	front = glm::vec3(0.0f, 0.0f, -1.0f);
+	yaw = startYaw;		// angulo vista hacia izquierda/derecha 
+	pitch = startPitch; // angulo vista hacia arriba/abajo
+
+	// TODO: Instead of using a calculated front, always focus on TUX
+	front = glm::vec3(0.0f, 0.0f, 1.0f);
 
 	moveSpeed = startMoveSpeed;
 	turnSpeed = startTurnSpeed;
@@ -64,6 +69,7 @@ void Camera::mouseControl(GLfloat xChange, GLfloat yChange)
 
 glm::mat4 Camera::calculateViewMatrix()
 {
+	// TODO: Tomar en cuenta la pocisión del tux
 	return glm::lookAt(position, position + front, up);
 }
 
@@ -81,11 +87,27 @@ glm::vec3 Camera::getCameraDirection()
 void Camera::update()
 {
 	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	front.y = sin(glm::radians(pitch));
 	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
+	front.y = sin(glm::radians(pitch));
+	//front.y = 0.0f; // Restrict the user from lookinng up and back
+	
 	front = glm::normalize(front);
 
 	right = glm::normalize(glm::cross(front, worldUp));
+	up = glm::normalize(glm::cross(right, front));
+}
+
+// ### 3rd Person Mode ###
+void Camera::adjustCamera(glm::vec3 tuxPos, glm::vec3 tuxDir, glm::vec3 tuxWorldUp) {
+	/*Calculamos la posición y sentido de la camara a partir de la pocisión del objeto*/
+
+	float scale = 4.0f;
+
+	position = tuxPos - scale * tuxDir;
+	// NOTE: Utilizamos tuxDir por que es la misma dirección a la que debe apuntar la cámara
+	front = tuxDir;
+	right = glm::normalize(glm::cross(front, tuxWorldUp));
 	up = glm::normalize(glm::cross(right, front));
 }
 
