@@ -35,6 +35,12 @@ void PointLight::UseLight(GLfloat ambientIntensityLocation, GLfloat ambientcolor
 	glUniform1f(exponentLocation, exponent);
 }
 
+//Funcion para colocar la intensidad de luminosidad
+void PointLight::SetIntensity(GLfloat intensidad)
+{
+	diffuseIntensity = intensidad;
+}
+
 PointLight::~PointLight()
 {
 }
