@@ -231,7 +231,7 @@ void Tux_M::move(GLuint &uniformModel){
 	glm::mat4 aux;
 	
 	model = glm::translate(model, glm::vec3(pos.x, -2.0f, pos.z));
-	model = glm::scale(model, glm::vec3(0.25f));
+	model = glm::scale(model, glm::vec3(0.80f));
 	//model = glm::rotate(model, glm::radians(yaw), glm::vec3(pos.x, 1.0f,pos.z));
 	//model *= glm::transpose(glm::lookAt(pos, pos + front, up));
 	
