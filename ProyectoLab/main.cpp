@@ -422,8 +422,8 @@ int main()
 	ItalianTruck = Model();
 	ItalianTruck.LoadModel("Models/italiana/italian_truck.obj");
 
-	/*ArabicTruck = Model();
-	ArabicTruck.LoadModel("Models/arabic/arabic_truck.obj");*/
+	ArabicTruck = Model();
+	ArabicTruck.LoadModel("Models/arabic/arabic.obj");
 
 	tacos = Model();
 	tacos.LoadModel("Models/Puesto_tacos_pastor/puesto_tacos_pastor.obj");
@@ -727,7 +727,7 @@ int main()
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		ItalianTruck.RenderModel();
+		ArabicTruck.RenderModel();
 
 
 
