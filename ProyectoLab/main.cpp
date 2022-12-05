@@ -98,6 +98,8 @@ Model tortas;
 Model tacos;
 Model garnachas;
 Model aguas;
+Model mesa;
+Model banio;
 
 Model Stage_M;
 
@@ -411,8 +413,8 @@ int main()
 
 	//--------------------------------------------------Cargando Modelos----------------------------------------------------------------------------
 
-	AssiaticTruck = Model();
-	AssiaticTruck.LoadModel("Models/assian/assian_truck.obj");
+	//AssiaticTruck = Model();
+	//AssiaticTruck.LoadModel("Models/asian/assian_truck.obj");
 
 	AmericanTruck = Model();
 	AmericanTruck.LoadModel("Models/hotdog/hotdog_ham.obj");
@@ -420,8 +422,8 @@ int main()
 	ItalianTruck = Model();
 	ItalianTruck.LoadModel("Models/italiana/italian_truck.obj");
 
-	ArabicTruck = Model();
-	ArabicTruck.LoadModel("Models/arabic/arabic_truck.obj");
+	/*ArabicTruck = Model();
+	ArabicTruck.LoadModel("Models/arabic/arabic_truck.obj");*/
 
 	tacos = Model();
 	tacos.LoadModel("Models/Puesto_tacos_pastor/puesto_tacos_pastor.obj");
@@ -433,7 +435,15 @@ int main()
 	garnachas.LoadModel("Models/puesto_garnachas/puesto_garnachas.obj");
 
 	garnachas = Model();
-	garnachas.LoadModel("Models/puesto_Aguas_Frescas/puesto_Aguas_Frescas.obj");
+	garnachas.LoadModel("Models/puesto_Aguas_Frescas/puesto_aguas_frescas.obj");
+
+	mesa = Model();
+	mesa.LoadModel("Models/mesas/mesa.obj");
+
+
+	banio = Model();
+	banio.LoadModel("Models/banio.obj");
+
 
 	Stage_M = Model();
 	Stage_M.LoadModel("Models/stage_clean.obj");
@@ -663,7 +673,7 @@ int main()
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 30.0f));
+		model = glm::scale(model, glm::vec3(20.0f, 1.0f, 30.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
@@ -684,25 +694,139 @@ int main()
 		//Blackhawk_M.RenderModel();
 
 		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(5.0f, -5.0f, 220.0f));
+		model = glm::scale(model, glm::vec3(7.0f, 10.0f, 10.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		Stage_M.RenderModel();
 
 		//----------------------------------------------------------Areas de comida------------------------------------------------------------------
-			//model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f+3*movCoche, 3.0f + 0.33*sin(glm::radians(rotllanta)), -1.0 ));
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(120.0f,1.0f,210.0f));
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-		/*model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));*/
-
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		AssiaticTruck.RenderModel();
 
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(120.0f, 1.0f, 70.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		AmericanTruck.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(120.0f, 1.0f, -70.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ItalianTruck.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(120.0f, 1.0f, -220.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		ItalianTruck.RenderModel();
+
+
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-130.0f, -0.5f, 150.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		tortas.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-80.0f, 0.0f, 50.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 10.0f, 10.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		tacos.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 10.0f, 10.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		aguas.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(40.0f, 0.0f, 100.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		mesa.RenderModel();
+
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-40.0f, 0.0f, 100.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		mesa.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(40.0f, 0.0f, 20.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		mesa.RenderModel();
+
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-40.0f, 0.0f, 20.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		mesa.RenderModel();
+
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(40.0f, 0.0f, -60.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		mesa.RenderModel();
+
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-40.0f, 0.0f, -60.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		mesa.RenderModel();
+
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(40.0f, 0.0f, -140.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		mesa.RenderModel();
+
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-40.0f, 0.0f, -140.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		mesa.RenderModel();
+
+
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, -200.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		banio.RenderModel();
 		/*glm::vec3 pos = camera.getCameraPosition();
 		glm::vec3 dir = camera.getCameraDirection();*/
 
-	//	tux.move(uniformModel);
+		//tux.move(uniformModel);
 
 
 		glUseProgram(0);
