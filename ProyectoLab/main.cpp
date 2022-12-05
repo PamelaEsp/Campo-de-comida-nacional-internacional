@@ -79,12 +79,25 @@ Texture AgaveTexture;
 Texture FlechaTexture;
 
 
-Model Test_M;
-Model Kitt_M;
-Model Llanta_M;
-Model Camino_M;
-Model Blackhawk_M;
-Model Dado_M;
+//Model Test_M;
+//Model Kitt_M;
+//Model Llanta_M;
+//Model Camino_M;
+//Model Blackhawk_M;
+//Model Dado_M;
+
+//food trucks :
+
+Model ItalianTruck;
+Model AssiaticTruck;
+Model AmericanTruck;
+Model ArabicTruck;
+
+//Comida Mexicana :
+Model tortas; 
+Model tacos;
+Model garnachas;
+Model aguas;
 
 Model Stage_M;
 
@@ -395,6 +408,33 @@ int main()
 	Camino_M = Model();
 	Camino_M.LoadModel("Models/railroad track.obj");*/
 
+
+	//--------------------------------------------------Cargando Modelos----------------------------------------------------------------------------
+
+	AssiaticTruck = Model();
+	AssiaticTruck.LoadModel("Models/assian/assian_truck.obj");
+
+	AmericanTruck = Model();
+	AmericanTruck.LoadModel("Models/hotdog/hotdog_ham.obj");
+
+	ItalianTruck = Model();
+	ItalianTruck.LoadModel("Models/italiana/italian_truck.obj");
+
+	ArabicTruck = Model();
+	ArabicTruck.LoadModel("Models/arabic/arabic_truck.obj");
+
+	tacos = Model();
+	tacos.LoadModel("Models/Puesto_tacos_pastor/puesto_tacos_pastor.obj");
+
+	tortas = Model();
+	tortas.LoadModel("Models/Puesto_tortas/Puesto_tortas_textura.obj");
+
+	garnachas = Model();
+	garnachas.LoadModel("Models/puesto_garnachas/puesto_garnachas.obj");
+
+	garnachas = Model();
+	garnachas.LoadModel("Models/puesto_Aguas_Frescas/puesto_Aguas_Frescas.obj");
+
 	Stage_M = Model();
 	Stage_M.LoadModel("Models/stage_clean.obj");
 
@@ -605,12 +645,23 @@ int main()
 		model = glm::mat4(1.0);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		// Stage_M.RenderModel();
+		Stage_M.RenderModel();
+
+		//----------------------------------------------------------Areas de comida------------------------------------------------------------------
+			//model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f+3*movCoche, 3.0f + 0.33*sin(glm::radians(rotllanta)), -1.0 ));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		/*model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));*/
+
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		AssiaticTruck.RenderModel();
 
 		/*glm::vec3 pos = camera.getCameraPosition();
 		glm::vec3 dir = camera.getCameraDirection();*/
 
-		tux.move(uniformModel);
+	//	tux.move(uniformModel);
 
 
 		glUseProgram(0);
