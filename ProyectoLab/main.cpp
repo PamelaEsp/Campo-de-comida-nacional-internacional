@@ -413,8 +413,8 @@ int main()
 
 	//--------------------------------------------------Cargando Modelos----------------------------------------------------------------------------
 
-	//AssiaticTruck = Model();
-	//AssiaticTruck.LoadModel("Models/asian/assian_truck.obj");
+	AssiaticTruck = Model();
+	AssiaticTruck.LoadModel("Models/asian/asian_truck.obj");
 
 	AmericanTruck = Model();
 	AmericanTruck.LoadModel("Models/hotdog/hotdog_ham.obj");
@@ -823,10 +823,11 @@ int main()
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		banio.RenderModel();
+
 		/*glm::vec3 pos = camera.getCameraPosition();
 		glm::vec3 dir = camera.getCameraDirection();*/
 
-		//tux.move(uniformModel);
+		tux.move(uniformModel);
 
 
 		glUseProgram(0);
