@@ -22,6 +22,9 @@ public:
 	bool isDay();
 	void toggleDay();
 
+	bool pointLightsButtonPress;
+	bool getPointLightsButtonsPress() { return pointLightsButtonPress; };
+
 	bool getCameraMode() { return camera_mode; };
 	void setCameraMode(bool mode);
 

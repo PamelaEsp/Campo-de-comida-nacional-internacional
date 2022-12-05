@@ -10,7 +10,7 @@ PointLight::PointLight() : Light()
 	exponent = 0.0f;
 }
 
-PointLight::PointLight(GLfloat red, GLfloat green, GLfloat blue, 
+PointLight::PointLight( GLfloat red, GLfloat green, GLfloat blue, 
 						GLfloat aIntensity, GLfloat dIntensity, 
 						GLfloat xPos, GLfloat yPos, GLfloat zPos, 
 						GLfloat con, GLfloat lin, GLfloat exp) : Light(red, green, blue, aIntensity, dIntensity)
@@ -36,9 +36,17 @@ void PointLight::UseLight(GLfloat ambientIntensityLocation, GLfloat ambientcolor
 }
 
 //Funcion para colocar la intensidad de luminosidad
-void PointLight::SetIntensity(GLfloat intensidad)
+void PointLight::setIntensity(GLfloat intensidad)
 {
 	diffuseIntensity = intensidad;
+}
+
+GLfloat PointLight::getIntensity() {
+	return diffuseIntensity;
+}
+
+glm::vec3 PointLight::getPosition() {
+	return position;
 }
 
 PointLight::~PointLight()
