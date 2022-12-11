@@ -334,6 +334,9 @@ int main()
 	sign2x1Texture = Texture("Textures/letrero_2x1.tga");
 	sign2x1Texture.LoadTextureA();
 
+	signDescuentoTexture = Texture("Textures/letrero_descuento.tga");
+	signDescuentoTexture.LoadTextureA();
+
 	//--------------------------------------------------Cargando Modelos----------------------------------------------------------------------------
 
 	AssiaticTruck = Model();
@@ -878,6 +881,20 @@ int main()
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		sign2x1Texture.UseTexture();
+		signMesh->RenderMesh();
+
+		// Cartel FoodTrucks
+		model = glm::mat4(1.0);
+		//model = glm::translate(model, glm::vec3(100.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(95.0f, 26.0f, 0.0f));
+
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		model = glm::scale(model, glm::vec3(20.0f, 13.0f, 7.0f));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		signDescuentoTexture.UseTexture();
 		signMesh->RenderMesh();
 
 		glUseProgram(0);
