@@ -97,6 +97,7 @@ Model puesto_aguas;
 Model mesa;
 Model banio;
 Model lampara;
+Model cartel;
 
 Model Stage_M;
 
@@ -396,6 +397,9 @@ int main()
 
 	lampara = Model();
 	lampara.LoadModel("Models/lampara/lampara.obj");
+
+	cartel = Model();
+	cartel.LoadModel("Models/cartel/Anuncion_neon.obj");
 
 	Tux_M tux = Tux_M(
 		glm::vec3(0.0f),
@@ -852,6 +856,25 @@ int main()
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		lampara.RenderModel();
+
+		//-------------------------------------PARA CARTELES
+		//Entre púesto de aguas y garnchas
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-100.0f, 0.0f, -180.0f));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cartel.RenderModel();
+
+		//Entre púesto de aguas y garnchas
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(100.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cartel.RenderModel();
 
 		tux.move(uniformModel);
 

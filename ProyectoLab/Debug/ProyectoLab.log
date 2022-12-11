@@ -8,8 +8,7 @@ C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\Pro
 C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\addons.h(15,13): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
 C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
 C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
-C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(326,13): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(533,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(535,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-LINK : warning LNK4098: la biblioteca predeterminada'MSVCRT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
+C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(327,13): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(537,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(539,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
   ProyectoLab.vcxproj -> C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\Debug\ProyectoLab.exe
