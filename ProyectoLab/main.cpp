@@ -80,6 +80,7 @@ Texture AgaveTexture;
 Texture FlechaTexture;
 
 Mesh* pisoMesh;
+Mesh* signMesh;
 
 //food trucks :
 Model ItalianTruck;
@@ -159,56 +160,28 @@ void CreateObjects()
 		-10.0f, 0.0f, 10.0f,	0.0f, 10.0f,	0.0f, -1.0f, 0.0f,
 		10.0f, 0.0f, 10.0f,		10.0f, 10.0f,	0.0f, -1.0f, 0.0f
 	};
-	unsigned int vegetacionIndices[] = {
-	   0, 1, 2,
-	   0, 2, 3,
-	   4,5,6,
-	   4,6,7
-	};
 
-	GLfloat vegetacionVertices[] = {
-		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-		0.5f, -0.5f, 0.0f,		1.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-		0.5f, 0.5f, 0.0f,		1.0f, 1.0f,		0.0f, 0.0f, 0.0f,
-		-0.5f, 0.5f, 0.0f,		0.0f, 1.0f,		0.0f, 0.0f, 0.0f,
-
-		0.0f, -0.5f, -0.5f,		0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-		0.0f, -0.5f, 0.5f,		1.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-		0.0f, 0.5f, 0.5f,		1.0f, 1.0f,		0.0f, 0.0f, 0.0f,
-		0.0f, 0.5f, -0.5f,		0.0f, 1.0f,		0.0f, 0.0f, 0.0f,
-
-
-	};
-
-
-	unsigned int flechaIndices[] = {
+	/* |===========|
+	*  |    TEXT   |
+	*  |===========|
+	*/
+	unsigned int letreroIndices[] = {
 	   0, 1, 2,
 	   0, 2, 3,
 	};
 
-	GLfloat flechaVertices[] = {
-		-0.5f, 0.0f, 0.5f,		0.0f, 0.0f,		0.0f, -1.0f, 0.0f,
-		0.5f, 0.0f, 0.5f,		1.0f, 0.0f,		0.0f, -1.0f, 0.0f,
-		0.5f, 0.0f, -0.5f,		1.0f, 1.0f,		0.0f, -1.0f, 0.0f,
-		-0.5f, 0.0f, -0.5f,		0.0f, 1.0f,		0.0f, -1.0f, 0.0f,
-
+	GLfloat letreroVertices[] = {
+		-0.5f, 0.0f, 0.5f,		0.0f, 0.0f,		0.0f, -1.0f, 0.0f,	// 0
+		0.5f, 0.0f, 0.5f,		1.0f, 0.0f,		0.0f, -1.0f, 0.0f,  // 1
+		0.5f, 0.0f, -0.5f,		1.0f, 1.0f,		0.0f, -1.0f, 0.0f,  // 2
+		-0.5f, 0.0f, -0.5f,		0.0f, 1.0f,		0.0f, -1.0f, 0.0f,  // 3
 	};
-
-	//Mesh* obj1 = new Mesh();
-	//obj1->CreateMesh(vertices, indices, 32, 12);
-	//meshList.push_back(obj1);
 
 	pisoMesh = new Mesh();
 	pisoMesh->CreateMesh(floorVertices, floorIndices, 32, 6);
 
-	/*Mesh* obj4 = new Mesh();
-	obj4->CreateMesh(vegetacionVertices, vegetacionIndices, 64, 12);
-	meshList.push_back(obj4);
-
-	Mesh* obj5 = new Mesh();
-	obj5->CreateMesh(flechaVertices, flechaIndices, 32, 6);
-	meshList.push_back(obj5);*/
-
+	signMesh = new Mesh();
+	signMesh->CreateMesh(letreroVertices, letreroIndices, 32, 6);
 }
 
 
@@ -504,36 +477,36 @@ int main()
 	GLuint uniformColor = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)(mainWindow.getBufferWidth() / mainWindow.getBufferHeight()), 0.1f, 1000.0f);
 
-	movCoche = 0.0f;
-	movOffset = 0.001f ;
-	rotllanta = 0.0f;
-	rotllantaOffset = 5.0f;
-	avanza = true;
+	//movCoche = 0.0f;
+	//movOffset = 0.001f ;
+	//rotllanta = 0.0f;
+	//rotllantaOffset = 5.0f;
+	//avanza = true;
 
-	glm::vec3 posblackhawk = glm::vec3(2.0f, 0.0f, 0.0f);
+	//glm::vec3 posblackhawk = glm::vec3(2.0f, 0.0f, 0.0f);
 	//KEYFRAMES DECLARADOS INICIALES
-	KeyFrame[0].movAvion_x = 0.0f;
-	KeyFrame[0].movAvion_y = 0.0f;
-	KeyFrame[0].giroAvion = 0;
+	//KeyFrame[0].movAvion_x = 0.0f;
+	//KeyFrame[0].movAvion_y = 0.0f;
+	//KeyFrame[0].giroAvion = 0;
 
 
-	KeyFrame[1].movAvion_x = 1.0f;
-	KeyFrame[1].movAvion_y = 2.0f;
-	KeyFrame[1].giroAvion = 0;
+	//KeyFrame[1].movAvion_x = 1.0f;
+	//KeyFrame[1].movAvion_y = 2.0f;
+	//KeyFrame[1].giroAvion = 0;
 
 
-	KeyFrame[2].movAvion_x = 2.0f;
-	KeyFrame[2].movAvion_y = 0.0f;
-	KeyFrame[2].giroAvion = 0;
+	//KeyFrame[2].movAvion_x = 2.0f;
+	//KeyFrame[2].movAvion_y = 0.0f;
+	//KeyFrame[2].giroAvion = 0;
 
 
-	KeyFrame[3].movAvion_x = 3.0f;
-	KeyFrame[3].movAvion_y = -2.0f;
-	KeyFrame[3].giroAvion = 0;
+	//KeyFrame[3].movAvion_x = 3.0f;
+	//KeyFrame[3].movAvion_y = -2.0f;
+	//KeyFrame[3].giroAvion = 0;
 
-	KeyFrame[4].movAvion_x = 4.0f;
-	KeyFrame[4].movAvion_y = 0.0f;
-	KeyFrame[4].giroAvion = 180.0f;
+	//KeyFrame[4].movAvion_x = 4.0f;
+	//KeyFrame[4].movAvion_y = 0.0f;
+	//KeyFrame[4].giroAvion = 180.0f;
 
 
 	//Agregar Kefyrame[5] para que el avión regrese al inicio
@@ -579,7 +552,7 @@ int main()
 			camera.adjustCamera(tux.getPos(), tux.getDir(), tux.getWorldUp(), tux.getCAMERA_SCALE());
 		}
 		else {
-			// Isometric Mode
+			// Aero Mode
 			tux.keyControl(mainWindow.getsKeys(), deltaTime);
 			tux.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 			camera.adjustAeroCamera(tux.getPos(), tux.getDir());
