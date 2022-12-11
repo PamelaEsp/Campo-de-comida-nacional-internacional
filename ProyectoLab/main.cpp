@@ -96,8 +96,10 @@ Model ArabicTruck;
 //Comida Mexicana :
 Model tortas; 
 Model tacos;
-Model garnachas;
-Model aguas;
+Model puesto_garnachas;
+Model puesto_aguas;
+
+//Modelos extra
 Model mesa;
 Model banio;
 
@@ -425,17 +427,18 @@ int main()
 	ArabicTruck = Model();
 	ArabicTruck.LoadModel("Models/arabic/arabic.obj");
 
+	//Para puestos de comida reginal
 	tacos = Model();
 	tacos.LoadModel("Models/Puesto_tacos_pastor/puesto_tacos_pastor.obj");
 
 	tortas = Model();
 	tortas.LoadModel("Models/Puesto_tortas/Puesto_tortas_textura.obj");
 
-	garnachas = Model();
-	garnachas.LoadModel("Models/puesto_garnachas/puesto_garnachas.obj");
+	puesto_garnachas = Model();
+	puesto_garnachas.LoadModel("Models/puesto_garnachas/puesto_garanachas.obj");
 
-	garnachas = Model();
-	garnachas.LoadModel("Models/puesto_Aguas_Frescas/puesto_aguas_frescas.obj");
+	puesto_aguas = Model();
+	puesto_aguas.LoadModel("Models/puesto_Aguas_Frescas/puesto_aguas_frescas_v2.obj");
 
 	mesa = Model();
 	mesa.LoadModel("Models/mesas/mesa.obj");
@@ -729,8 +732,9 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ArabicTruck.RenderModel();
 
+		//----------------------------------------------------------Areas de comida------------------------------------------------------------------
 
-
+		//Puesto de tortas
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-130.0f, -0.5f, 150.0f));
 		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
@@ -739,19 +743,32 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		tortas.RenderModel();
 
+		//Puesto de tacos 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-80.0f, 0.0f, 50.0f));
-		model = glm::scale(model, glm::vec3(5.0f, 10.0f, 10.0f));
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, 50.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 5.0f));
+		model = glm::rotate(model, 270 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		tacos.RenderModel();
 
+		//Puesto de aguas
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(5.0f, 10.0f, 10.0f));
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, -130.0f));
+		model = glm::scale(model, glm::vec3(2.5f, 5.0f, 5.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		aguas.RenderModel();
+		puesto_aguas.RenderModel();
+
+		//Puesto de garnachas
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, -250.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 10.0f, 5.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		puesto_garnachas.RenderModel();
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(40.0f, 0.0f, 100.0f));
