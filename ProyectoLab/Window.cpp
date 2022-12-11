@@ -163,6 +163,7 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 void Window::ManejaMouse(GLFWwindow* window, double xPos, double yPos)
 {
 	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
 	if (theWindow->mouseFirstMoved)
 	{
