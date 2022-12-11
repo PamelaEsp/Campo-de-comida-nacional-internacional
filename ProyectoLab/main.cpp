@@ -318,6 +318,8 @@ void animate(void)
 
 /* FIN KEYFRAMES*/
 
+//contador de luces puntuales lo declaramos aqui para que podamos prenderlas y apagarlas con el ciclod de los skybox
+unsigned int pointLightCount = 0;
 
 bool checkTime(std::chrono::steady_clock::time_point start, bool day_state) {
 	// Revisamos si el número de segundos ya supero el limite
@@ -329,9 +331,11 @@ bool checkTime(std::chrono::steady_clock::time_point start, bool day_state) {
 		if (day_state)
 		{
 			skybox = Skybox(skyboxNightFaces);
+			pointLightCount += 3;//si es de noche encendemos las 3 
 		}
 		else {
 			skybox = Skybox(skyboxDayFaces);
+			pointLightCount = 0;//si es de dia las apagamos 
 		}
 		return true;
 	}
@@ -434,15 +438,33 @@ int main()
 	//float aIntensity = getAttenuationValue(1.0f, 0.014f, 0.0007f, 325.0f);
 
 	//contador de luces puntuales
-	unsigned int pointLightCount = 0;
-	// Farola
+	//unsigned int pointLightCount = 0;
+	// Farola de sushi y hotdog
 	pointLights[0] = PointLight(
 		1.0f, 1.0f, 0.4f,	// R G B
 		//1.0f, 0.0f, 0.0f,
-		1.0f, 1.0f,	// AmbientIntenssity / diffuseIntensity
-		0.0f, 3.0f, 0.0f,	// Position
-		0.3f, 0.2f, 0.1f);	// Contant, linar, exponent
-	pointLightCount++;
+		10.0f, 1.0f,	// AmbientIntenssity / diffuseIntensity
+		100.0f, 2.0f, 140.0f,	// Position
+		0.5f, 0.7f, 0.1f);	// Contant, linar, exponent
+	//pointLightCount++;
+
+	// Farola de italiana y arabe
+	pointLights[1] = PointLight(
+		1.0f, 1.0f, 0.4f,	// R G B
+		//1.0f, 0.0f, 0.0f,
+		10.0f, 1.0f,	// AmbientIntenssity / diffuseIntensity
+		100.0f, 2.0f, -150.0f,	// Position
+		0.5f, 0.7f, 0.1f);	// Contant, linar, exponent
+	//pointLightCount++;
+
+	// Farola de tacos y aguas
+	pointLights[2] = PointLight(
+		1.0f, 1.0f, 0.4f,	// R G B
+		//1.0f, 0.0f, 0.0f,
+		10.0f, 1.0f,	// AmbientIntenssity / diffuseIntensity
+		-100.0f, 2.0f, -60.0f,	// Position
+		0.5f, 0.7f, 0.1f);	// Contant, linar, exponent
+	//pointLightCount++;
 
 	
 	unsigned int spotLightCount = 0;
