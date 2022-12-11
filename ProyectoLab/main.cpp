@@ -77,7 +77,7 @@ Texture dirtTexture;
 Texture plainTexture;
 Texture pisoTexture;
 Texture AgaveTexture;
-Texture FlechaTexture;
+Texture sign2x1Texture;
 
 Mesh* pisoMesh;
 Mesh* signMesh;
@@ -330,6 +330,9 @@ int main()
 	pisoTexture = Texture("Textures/piso_pasto_skybox2.tga");
 	pisoTexture.LoadTextureA();
 
+	sign2x1Texture = Texture("Textures/letrero_2x1.tga");
+	sign2x1Texture.LoadTextureA();
+
 	//--------------------------------------------------Cargando Modelos----------------------------------------------------------------------------
 
 	AssiaticTruck = Model();
@@ -373,6 +376,8 @@ int main()
 
 	cartel = Model();
 	cartel.LoadModel("Models/cartel/Anuncion_neon.obj");
+
+
 
 	//Tux_M tux = Tux_M(
 	//	glm::vec3(0.0f),
@@ -477,39 +482,6 @@ int main()
 	GLuint uniformColor = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)(mainWindow.getBufferWidth() / mainWindow.getBufferHeight()), 0.1f, 1000.0f);
 
-	//movCoche = 0.0f;
-	//movOffset = 0.001f ;
-	//rotllanta = 0.0f;
-	//rotllantaOffset = 5.0f;
-	//avanza = true;
-
-	//glm::vec3 posblackhawk = glm::vec3(2.0f, 0.0f, 0.0f);
-	//KEYFRAMES DECLARADOS INICIALES
-	//KeyFrame[0].movAvion_x = 0.0f;
-	//KeyFrame[0].movAvion_y = 0.0f;
-	//KeyFrame[0].giroAvion = 0;
-
-
-	//KeyFrame[1].movAvion_x = 1.0f;
-	//KeyFrame[1].movAvion_y = 2.0f;
-	//KeyFrame[1].giroAvion = 0;
-
-
-	//KeyFrame[2].movAvion_x = 2.0f;
-	//KeyFrame[2].movAvion_y = 0.0f;
-	//KeyFrame[2].giroAvion = 0;
-
-
-	//KeyFrame[3].movAvion_x = 3.0f;
-	//KeyFrame[3].movAvion_y = -2.0f;
-	//KeyFrame[3].giroAvion = 0;
-
-	//KeyFrame[4].movAvion_x = 4.0f;
-	//KeyFrame[4].movAvion_y = 0.0f;
-	//KeyFrame[4].giroAvion = 180.0f;
-
-
-	//Agregar Kefyrame[5] para que el avión regrese al inicio
 	start_time = std::chrono::high_resolution_clock::now();
 
 	////Loop mientras no se cierra la ventana
@@ -870,6 +842,32 @@ int main()
 		cartel.RenderModel();
 
 		tux.move(uniformModel);
+
+		// Carteles
+		//textura con movimiento
+		//Importantes porque la variable uniform no podemos modificarla directamente
+		toffsetu += 0.001;
+		toffsetv += 0.0;
+		//para que no se desborde la variable
+		if (toffsetu > 1.0)
+			toffsetu = 0.0;
+		//if (toffsetv > 1.0)
+		//	toffsetv = 0;
+		//printf("\ntfosset %f \n", toffsetu);
+
+		//pasar a la variable uniform el valor actualizado
+		toffset = glm::vec2(toffsetu, toffsetv);
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-97.8f, 26.0f, -179.5f));
+
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		model = glm::scale(model, glm::vec3(20.0f, 13.0f, 7.0f));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		sign2x1Texture.UseTexture();
+		signMesh->RenderMesh();
 
 		glUseProgram(0);
 
