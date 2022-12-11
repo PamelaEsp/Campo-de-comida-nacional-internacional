@@ -96,6 +96,7 @@ Model puesto_aguas;
 //Modelos extra
 Model mesa;
 Model banio;
+Model lampara;
 
 Model Stage_M;
 
@@ -388,6 +389,9 @@ int main()
 
 	Stage_M = Model();
 	Stage_M.LoadModel("Models/stage_clean.obj");
+
+	lampara = Model();
+	lampara.LoadModel("Models/lampara/lampara.obj");
 
 	Tux_M tux = Tux_M(
 		glm::vec3(0.0f),
@@ -765,6 +769,63 @@ int main()
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		banio.RenderModel();
+
+		//-----------------------------------------------------------------------Modelos de laparas----------------------
+		//Lado de food trucks
+		//Entre sushi y hot dog 
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(150.0f, 0.0f, 140.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		lampara.RenderModel();
+
+		//Entre hot dog e italiana 
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(150.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		lampara.RenderModel();
+
+		//Entre italiana y arabe
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(150.0f, 0.0f, -150.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		lampara.RenderModel();
+
+		//Lado de comida mexicana 
+		//Entre tortas y tacos 
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, 80.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		lampara.RenderModel();
+
+		//Entre tacos y aguas 
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, -60.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		lampara.RenderModel();
+
+		//Entre púesto de aguas y garnchas
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, -200.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		lampara.RenderModel();
 
 		tux.move(uniformModel);
 
