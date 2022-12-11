@@ -401,13 +401,21 @@ int main()
 	cartel = Model();
 	cartel.LoadModel("Models/cartel/Anuncion_neon.obj");
 
+	//Tux_M tux = Tux_M(
+	//	glm::vec3(0.0f),
+	//	"Models/tux/body.obj", // body
+	//	"Models/tux/larm.obj",
+	//	"Models/tux/rarm.obj",
+	//	"Models/tux/lfoot.obj",
+	//	"Models/tux/rfoot.obj"
+	//);
 	Tux_M tux = Tux_M(
 		glm::vec3(0.0f),
-		"Models/tux/body.obj", // body
-		"Models/tux/larm.obj",
-		"Models/tux/rarm.obj",
-		"Models/tux/lfoot.obj",
-		"Models/tux/rfoot.obj"
+		"Models/tux_v2/Cuerpo.obj", // body
+		"Models/tux_v2/brazo_i.obj",
+		"Models/tux_v2/brazo_d.obj",
+		"Models/tux_v2/pie_i.obj",
+		"Models/tux_v2/pie_d.obj"
 	);
 
 	skyboxDayFaces.push_back("Textures/Skybox/dia/dia_lt.tga");

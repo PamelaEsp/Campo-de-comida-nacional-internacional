@@ -65,6 +65,10 @@ Tux_M::Tux_M(
 }
 
 void Tux_M::walkAnimation() {
+	/* Animate arms and legs while walking
+	* 
+	* TODO: Sync usinc 
+	*/
 	float step = 0.2f;
 
 	// Brazo izquierdo
