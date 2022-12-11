@@ -670,17 +670,13 @@ int main()
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		Stage_M.RenderModel();
 
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-170.0f, -5.0f, -220.0f));
+		/*model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-150.0f, -5.0f, -600.0f));
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		banio.RenderModel();
 
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(170.0f, -5.0f, -220.0f));
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		banio.RenderModel();
+		*/
 
 		//----------------------------------------------------------Areas de comida------------------------------------------------------------------
 		model = glm::mat4(1.0);
@@ -814,7 +810,21 @@ int main()
 
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, -200.0f));
+		model = glm::translate(model, glm::vec3(-100.0f, 0.0f, -350.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		banio.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-50.0f, 0.0f, -350.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		banio.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -350.0f));
 		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
