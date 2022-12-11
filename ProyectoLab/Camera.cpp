@@ -109,6 +109,16 @@ void Camera::update()
 	up = glm::normalize(glm::cross(right, front));
 }
 
+void Camera::adjustAeroCamera(glm::vec3 tuxPos, glm::vec3 tuxDir) {
+	position = tuxPos;
+	position.y = 180.0f;
+	
+	front = glm::vec3(0.0f, -1.0f, 0.0f);
+	right = glm::normalize(glm::cross(front, tuxDir));
+	up = glm::normalize(glm::cross(right, front));
+}
+
+
 /* ### 3rd Person Mode ###
 *	Adjust the camera to always be positioned behind TUX and looking at front.
 * 
