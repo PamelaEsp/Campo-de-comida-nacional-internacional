@@ -7,6 +7,8 @@
 
 const float arm_angle_limit = 24.0f;
 const float foot_angle_limit = 20.0f;
+const float TUX_SCALE = 2.0f;
+
 
 /*
 TODO:
@@ -31,8 +33,9 @@ Tux_M::Tux_M(
 	worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	yaw = 90.0f;  // hacia al frente
 	pitch = 0.0f; 
+	CAMERA_3D_MODE_SCALE = 70.0f;
 
-	moveSpeed = 0.5f;
+	//moveSpeed = .f;
 	turnSpeed = 0.5f;
 
 	// Limit arms and foot movement
@@ -115,35 +118,12 @@ void Tux_M::walkAnimation() {
 	}
 
 }
-//void Tux_M::draw(GLuint uniformModel) {
-//	glm::mat4 model = glm::mat4(1.0);
-//	
-//	//Transform all parts
-//	model = glm::translate(model, pos);
-//	/*
-//	Rotar de acuerdo al angulo que exista entre el vector de dirección actual
-//	y el nuevo.
-//	*/
-//	// model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-//
-//	//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-//	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-//	
-//
-//	body_M.RenderModel();
-//}
 
 void Tux_M::keyControl(bool* keys, GLfloat deltaTime)
 {
 	// Calcula la posición del objeto a partir del vector dirección y hacia donde queremos ir
 	
-	GLfloat velocity = moveSpeed * deltaTime;
-
-	//if (keys[GLFW_KEY_X])  // Toggle a light according to its distance
-	//{
-	//	// FIXME: this is fired mutliple times while it must be called only once
-	//	printf("Pos: (%f, %f, %f)\n", pos.x, pos.y, pos.z);
-	//}
+	GLfloat velocity = STEP_INC * deltaTime;
 
 	if (keys[GLFW_KEY_W])
 	{
@@ -181,24 +161,6 @@ void Tux_M::mouseControl(GLfloat xChange, GLfloat yChange)
 	yaw += xChange;  // lados
 
 	rotation_angle = yaw - rotation_angle;
-	/*if (rotation_angle > 0.0f || rotation_angle < 0.0f)
-	{
-		printf("Rot Ang: %f\n", rotation_angle);
-		printf("yaw: %f\n", yaw);
-	}*/
-
-	// No permitimos movimientos de arriba abajo, por lo que pitch nunca se modifica
-	//pitch += yChange; // arriba abajo
-
-	//if (pitch > 89.0f)
-	//{
-	//	pitch = 89.0f;
-	//}
-
-	//if (pitch < -89.0f)
-	//{
-	//	pitch = -89.0f;
-	//}
 
 	update();
 }
@@ -206,19 +168,15 @@ void Tux_M::mouseControl(GLfloat xChange, GLfloat yChange)
 
 void Tux_M::update()
 {
-	glm::vec3 oldFront = front;
 
 	// TODO: As pitch is always constant, reuse it.
 	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-
 	//front.y = sin(glm::radians(pitch));
+
 	front.y = 0.0f; // No changes in y
 
 	front = glm::normalize(front);
-
-	//rotation_angle =  glm::acos(glm::dot(oldFront, front));
-	//printf("Rotation angle: %f\n", rotation_angle);
 
 	right = glm::normalize(glm::cross(front, worldUp));
 	up = glm::normalize(glm::cross(right, front));
@@ -231,7 +189,7 @@ void Tux_M::move(GLuint &uniformModel){
 	glm::mat4 aux;
 	
 	model = glm::translate(model, glm::vec3(pos.x, -2.0f, pos.z));
-	model = glm::scale(model, glm::vec3(0.80f));
+	model = glm::scale(model, glm::vec3(TUX_SCALE));
 	//model = glm::rotate(model, glm::radians(yaw), glm::vec3(pos.x, 1.0f,pos.z));
 	//model *= glm::transpose(glm::lookAt(pos, pos + front, up));
 	

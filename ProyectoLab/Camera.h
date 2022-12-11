@@ -20,7 +20,8 @@ public:
 	glm::vec3 getCameraDirection();
 	glm::mat4 calculateViewMatrix();
 
-	void adjustCamera(glm::vec3 tuxPos, glm::vec3 tuxDir, glm::vec3 tuxWorldUp);
+	void adjustCamera(glm::vec3 tuxPos, glm::vec3 tuxDir, glm::vec3 tuxWorldUp, float camera_scale);
+	void adjustAeroCamera(glm::vec3 tuxPos, glm::vec3 tuxWorldUp);
 
 	~Camera();
 

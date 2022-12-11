@@ -45,6 +45,7 @@ Animación:
 #include "SpotLight.h"
 #include "Material.h"
 const float toRadians = 3.14159265f / 180.0f;
+const float FLOOR_SIZE = 60.0f;
 
 // PROJECT SETUP
 const int DAY_DURATION = 10; // Seconds
@@ -78,16 +79,9 @@ Texture pisoTexture;
 Texture AgaveTexture;
 Texture FlechaTexture;
 
-
-//Model Test_M;
-//Model Kitt_M;
-//Model Llanta_M;
-//Model Camino_M;
-//Model Blackhawk_M;
-//Model Dado_M;
+Mesh* pisoMesh;
 
 //food trucks :
-
 Model ItalianTruck;
 Model AssiaticTruck;
 Model AmericanTruck;
@@ -96,10 +90,13 @@ Model ArabicTruck;
 //Comida Mexicana :
 Model tortas; 
 Model tacos;
-Model garnachas;
-Model aguas;
+Model puesto_garnachas;
+Model puesto_aguas;
+
+//Modelos extra
 Model mesa;
 Model banio;
+Model lampara;
 
 Model Stage_M;
 
@@ -131,36 +128,6 @@ static const char* fShader = "shaders/shader_light.frag";
 
 //PARA INPUT CON KEYFRAMES 
 void inputKeyframes(bool* keys);
-
-
-//cálculo del promedio de las normales para sombreado de Phong
-void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
-	unsigned int vLength, unsigned int normalOffset)
-{
-	for (size_t i = 0; i < indiceCount; i += 3)
-	{
-		unsigned int in0 = indices[i] * vLength;
-		unsigned int in1 = indices[i + 1] * vLength;
-		unsigned int in2 = indices[i + 2] * vLength;
-		glm::vec3 v1(vertices[in1] - vertices[in0], vertices[in1 + 1] - vertices[in0 + 1], vertices[in1 + 2] - vertices[in0 + 2]);
-		glm::vec3 v2(vertices[in2] - vertices[in0], vertices[in2 + 1] - vertices[in0 + 1], vertices[in2 + 2] - vertices[in0 + 2]);
-		glm::vec3 normal = glm::cross(v1, v2);
-		normal = glm::normalize(normal);
-
-		in0 += normalOffset; in1 += normalOffset; in2 += normalOffset;
-		vertices[in0] += normal.x; vertices[in0 + 1] += normal.y; vertices[in0 + 2] += normal.z;
-		vertices[in1] += normal.x; vertices[in1 + 1] += normal.y; vertices[in1 + 2] += normal.z;
-		vertices[in2] += normal.x; vertices[in2 + 1] += normal.y; vertices[in2 + 2] += normal.z;
-	}
-
-	for (size_t i = 0; i < verticeCount / vLength; i++)
-	{
-		unsigned int nOffset = i * vLength + normalOffset;
-		glm::vec3 vec(vertices[nOffset], vertices[nOffset + 1], vertices[nOffset + 2]);
-		vec = glm::normalize(vec);
-		vertices[nOffset] = vec.x; vertices[nOffset + 1] = vec.y; vertices[nOffset + 2] = vec.z;
-	}
-}
 
 
 void CreateObjects()
@@ -226,26 +193,20 @@ void CreateObjects()
 
 	};
 
-	Mesh* obj1 = new Mesh();
-	obj1->CreateMesh(vertices, indices, 32, 12);
-	meshList.push_back(obj1);
+	//Mesh* obj1 = new Mesh();
+	//obj1->CreateMesh(vertices, indices, 32, 12);
+	//meshList.push_back(obj1);
 
-	Mesh* obj2 = new Mesh();
-	obj2->CreateMesh(vertices, indices, 32, 12);
-	meshList.push_back(obj2);
+	pisoMesh = new Mesh();
+	pisoMesh->CreateMesh(floorVertices, floorIndices, 32, 6);
 
-	Mesh* obj3 = new Mesh();
-	obj3->CreateMesh(floorVertices, floorIndices, 32, 6);
-	meshList.push_back(obj3);
-
-
-	Mesh* obj4 = new Mesh();
+	/*Mesh* obj4 = new Mesh();
 	obj4->CreateMesh(vegetacionVertices, vegetacionIndices, 64, 12);
 	meshList.push_back(obj4);
 
 	Mesh* obj5 = new Mesh();
 	obj5->CreateMesh(flechaVertices, flechaIndices, 32, 6);
-	meshList.push_back(obj5);
+	meshList.push_back(obj5);*/
 
 }
 
@@ -388,28 +349,8 @@ int main()
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.5f, 0.5f);
 
-	//brickTexture = Texture("Textures/brick.png");
-	//brickTexture.LoadTextureA();
-	//dirtTexture = Texture("Textures/dirt.png");
-	//dirtTexture.LoadTextureA();
-	//plainTexture = Texture("Textures/plain.png");
-	//plainTexture.LoadTextureA();
 	pisoTexture = Texture("Textures/piso_pasto_skybox2.tga");
-
 	pisoTexture.LoadTextureA();
-	/*AgaveTexture = Texture("Textures/Agave.tga");
-	AgaveTexture.LoadTextureA();
-	FlechaTexture = Texture("Textures/flechas.tga");
-	FlechaTexture.LoadTextureA();
-	Kitt_M = Model();
-	Kitt_M.LoadModel("Models/kitt_optimizado.obj");
-	Llanta_M = Model();
-	Llanta_M.LoadModel("Models/k_rueda.3ds");
-	Blackhawk_M = Model();
-	Blackhawk_M.LoadModel("Models/uh60.obj");
-	Camino_M = Model();
-	Camino_M.LoadModel("Models/railroad track.obj");*/
-
 
 	//--------------------------------------------------Cargando Modelos----------------------------------------------------------------------------
 
@@ -425,17 +366,18 @@ int main()
 	ArabicTruck = Model();
 	ArabicTruck.LoadModel("Models/arabic/arabic.obj");
 
+	//Para puestos de comida reginal
 	tacos = Model();
 	tacos.LoadModel("Models/Puesto_tacos_pastor/puesto_tacos_pastor.obj");
 
 	tortas = Model();
 	tortas.LoadModel("Models/Puesto_tortas/Puesto_tortas_textura.obj");
 
-	garnachas = Model();
-	garnachas.LoadModel("Models/puesto_garnachas/puesto_garnachas.obj");
+	puesto_garnachas = Model();
+	puesto_garnachas.LoadModel("Models/puesto_garnachas/puesto_garanachas.obj");
 
-	garnachas = Model();
-	garnachas.LoadModel("Models/puesto_Aguas_Frescas/puesto_aguas_frescas.obj");
+	puesto_aguas = Model();
+	puesto_aguas.LoadModel("Models/puesto_Aguas_Frescas/puesto_aguas_frescas_v2.obj");
 
 	mesa = Model();
 	mesa.LoadModel("Models/mesas/mesa.obj");
@@ -448,8 +390,8 @@ int main()
 	Stage_M = Model();
 	Stage_M.LoadModel("Models/stage_clean.obj");
 
-	/*Test_M = Model();
-	Test_M.LoadModel("Models/tux/body.obj");*/
+	lampara = Model();
+	lampara.LoadModel("Models/lampara/lampara.obj");
 
 	Tux_M tux = Tux_M(
 		glm::vec3(0.0f),
@@ -526,7 +468,7 @@ int main()
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0, uniformTextureOffset = 0;
 	GLuint uniformColor = 0;
-	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
+	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)(mainWindow.getBufferWidth() / mainWindow.getBufferHeight()), 0.1f, 1000.0f);
 
 	movCoche = 0.0f;
 	movOffset = 0.001f ;
@@ -600,12 +542,16 @@ int main()
 			// 3rd Person Mode
 			tux.keyControl(mainWindow.getsKeys(), deltaTime);
 			tux.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
-			camera.adjustCamera(tux.getPos(), tux.getDir(), tux.getWorldUp());
+			camera.adjustCamera(tux.getPos(), tux.getDir(), tux.getWorldUp(), tux.getCAMERA_SCALE());
 		}
 		else {
 			// Isometric Mode
-			camera.keyControl(mainWindow.getsKeys(), deltaTime);
-			camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+			tux.keyControl(mainWindow.getsKeys(), deltaTime);
+			tux.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+			camera.adjustAeroCamera(tux.getPos(), tux.getDir());
+
+			/*camera.keyControl(mainWindow.getsKeys(), deltaTime);
+			camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());*/
 		}
 
 		bool* keys = mainWindow.getsKeys();
@@ -631,7 +577,7 @@ int main()
 			}
 		}
 
-		//para keyframes
+		// para keyframes
 		inputKeyframes(mainWindow.getsKeys());
 		animate();
 
@@ -656,15 +602,16 @@ int main()
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
-		// luz ligada a la cámara de tipo flash
-		//glm::vec3 lowerLight = camera.getCameraPosition();
-		//lowerLight.y -= 0.3f;
-		//spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
-
 		//información al shader de fuentes de iluminación
 		shaderList[0].SetDirectionalLight(&sunLight);
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
+
+		/* 
+		*	--------------------------------------------------
+		*		CARGA DE MODELOS
+		*	--------------------------------------------------
+		*/ 
 
 		glm::mat4 model(1.0);
 		glm::mat4 modelaux(1.0);
@@ -673,25 +620,14 @@ int main()
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(20.0f, 1.0f, 30.0f));
+		// Make plane bigger
+		model = glm::scale(model, glm::vec3(FLOOR_SIZE, 1.0f, FLOOR_SIZE));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		pisoTexture.UseTexture();
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		meshList[2]->RenderMesh();
-
-		//model = glm::mat4(1.0);
-		//model = glm::translate(model, glm::vec3(0.0f+3*movCoche, 3.0f + 0.33*sin(glm::radians(rotllanta)), -1.0 ));
-		//model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		//model = glm::rotate(model, -90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-		//model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		//Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		////color = glm::vec3(0.0f, 1.0f, 0.0f);
-		////glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		//Blackhawk_M.RenderModel();
+		pisoMesh->RenderMesh();
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(5.0f, -5.0f, 220.0f));
@@ -729,8 +665,9 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ArabicTruck.RenderModel();
 
+		//----------------------------------------------------------Areas de comida------------------------------------------------------------------
 
-
+		//Puesto de tortas
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-130.0f, -0.5f, 150.0f));
 		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
@@ -739,19 +676,32 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		tortas.RenderModel();
 
+		//Puesto de tacos 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-80.0f, 0.0f, 50.0f));
-		model = glm::scale(model, glm::vec3(5.0f, 10.0f, 10.0f));
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, 50.0f));
+		model = glm::scale(model, glm::vec3(10.0f, 10.0f, 5.0f));
+		model = glm::rotate(model, 270 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		tacos.RenderModel();
 
+		//Puesto de aguas
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(5.0f, 10.0f, 10.0f));
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, -130.0f));
+		model = glm::scale(model, glm::vec3(2.5f, 5.0f, 5.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		aguas.RenderModel();
+		puesto_aguas.RenderModel();
+
+		//Puesto de garnachas
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, -250.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 10.0f, 5.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		puesto_garnachas.RenderModel();
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(40.0f, 0.0f, 100.0f));
@@ -824,11 +774,64 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		banio.RenderModel();
 
-		/*glm::vec3 pos = camera.getCameraPosition();
-		glm::vec3 dir = camera.getCameraDirection();*/
+		//-----------------------------------------------------------------------Modelos de laparas----------------------
+		//Lado de food trucks
+		//Entre sushi y hot dog 
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(150.0f, 0.0f, 140.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		lampara.RenderModel();
+
+		//Entre hot dog e italiana 
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(150.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		lampara.RenderModel();
+
+		//Entre italiana y arabe
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(150.0f, 0.0f, -150.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		lampara.RenderModel();
+
+		//Lado de comida mexicana 
+		//Entre tortas y tacos 
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, 80.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		lampara.RenderModel();
+
+		//Entre tacos y aguas 
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, -60.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		lampara.RenderModel();
+
+		//Entre púesto de aguas y garnchas
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, -200.0f));
+		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		lampara.RenderModel();
 
 		tux.move(uniformModel);
-
 
 		glUseProgram(0);
 

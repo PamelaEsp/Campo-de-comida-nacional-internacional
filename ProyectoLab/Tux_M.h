@@ -12,7 +12,7 @@ Tux has the following abilities:
 - when walking move its arms and legs
 */
 
-const float STEP_INC = 1.0f;
+const float STEP_INC = 3.0f;
 
 
 class Tux_M
@@ -37,6 +37,7 @@ class Tux_M
 		float right_arm_ang;
 		float left_foot_ang;
 		float right_foot_ang;
+		float CAMERA_3D_MODE_SCALE;
 
 		bool larm_d, rfoot_d;
 		void update();
@@ -57,6 +58,7 @@ class Tux_M
 		glm::vec3 getPos() { return pos; };
 		glm::vec3 getDir() { return front; };
 		glm::vec3 getWorldUp() { return worldUp; };
+		float getCAMERA_SCALE() { return CAMERA_3D_MODE_SCALE; };
 
 		void walkAnimation();
 		//void draw(GLuint uniformModel);
