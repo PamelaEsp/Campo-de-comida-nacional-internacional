@@ -542,8 +542,12 @@ int main()
 		}
 		else {
 			// Isometric Mode
-			camera.keyControl(mainWindow.getsKeys(), deltaTime);
-			camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+			tux.keyControl(mainWindow.getsKeys(), deltaTime);
+			tux.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+			camera.adjustAeroCamera(tux.getPos(), tux.getDir());
+
+			/*camera.keyControl(mainWindow.getsKeys(), deltaTime);
+			camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());*/
 		}
 
 		bool* keys = mainWindow.getsKeys();
