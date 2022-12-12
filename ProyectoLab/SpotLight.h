@@ -23,6 +23,7 @@ public:
 	void setDirection(glm::vec3 nDir);
 	void setColor(GLfloat R, GLfloat G, GLfloat B);
 	void SetIntensity(GLfloat intensidad);
+	void SetAmbientIntensity(GLfloat intensidadAmbiente);
 	~SpotLight();
 
 private:

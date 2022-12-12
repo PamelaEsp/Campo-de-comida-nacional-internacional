@@ -19,6 +19,10 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	camera_mode = true;
 	pointLightsButtonPress = false;
 
+	//Para encendido de luces
+	enciendeLucesDifusa = 0.0f;
+	enciendeLucesAmbiente = 0.0f;
+
 	for (size_t i = 0; i < 1024; i++)
 	{
 		keys[i] = 0;
@@ -128,6 +132,20 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	if (key == GLFW_KEY_I)
 	{
 		theWindow->setCameraMode(false);
+	}
+
+	//Para encendido de luces
+	//Estado encendido
+	if (key == GLFW_KEY_Z) {
+		theWindow->enciendeLucesDifusa = 10.0f;
+		theWindow->enciendeLucesAmbiente = 50.0f;
+		printf("se presiono la tecla %d'\n", key);
+	}
+	//Estado apagado
+	if (key == GLFW_KEY_X) {
+		theWindow->enciendeLucesDifusa = 0.0f;
+		theWindow->enciendeLucesAmbiente = 0.0f;
+		printf("se presiono la tecla %d'\n", key);
 	}
 
 

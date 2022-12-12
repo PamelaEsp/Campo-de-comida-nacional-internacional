@@ -65,6 +65,11 @@ void SpotLight::SetIntensity(GLfloat intensidad)
 	diffuseIntensity = intensidad;
 }
 
+void SpotLight::SetAmbientIntensity(GLfloat intensidadAmbiente)
+{
+	ambientIntensity = intensidadAmbiente;
+}
+
 SpotLight::~SpotLight()
 {
 }
