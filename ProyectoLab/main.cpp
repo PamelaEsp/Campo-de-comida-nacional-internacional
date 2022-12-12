@@ -48,10 +48,8 @@ const float toRadians = 3.14159265f / 180.0f;
 const float FLOOR_SIZE = 60.0f;
 
 // PROJECT SETUP
-const int DAY_DURATION = 10; // Seconds
+const int DAY_DURATION = 5; // Seconds
 std::chrono::steady_clock::time_point start_time;
-
-
 
 //variables para animación
 float movCoche;
@@ -61,16 +59,13 @@ float rotllantaOffset;
 bool avanza;
 float toffsetu = 0.0f;
 float toffsetv = 0.0f;
-float reproduciranimacion, habilitaranimacion,
-guardoFrame, reinicioFrame, ciclo, ciclo2, contador = 0;
-
-
+//float reproduciranimacion, habilitaranimacion, guardoFrame, reinicioFrame, ciclo, ciclo2, contador = 0;
 
 Window mainWindow;
+Camera camera;
+
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
-
-Camera camera;
 
 Texture brickTexture;
 Texture dirtTexture;
@@ -102,6 +97,7 @@ Model lampara;
 Model cartel;
 
 Model Stage_M;
+Model StageLight_M;  // Reused 3 times 
 
 Skybox skybox;
 std::vector<std::string> skyboxDayFaces, skyboxNightFaces;
@@ -193,105 +189,6 @@ void CreateShaders()
 	shaderList.push_back(*shader1);
 }
 
-///////////////////////////////KEYFRAMES/////////////////////
-
-
-bool animacion = false;
-
-
-//NEW// Keyframes
-float posXavion = 2.0, posYavion = 5.0, posZavion = -3.0;
-float	movAvion_x = 0.0f, movAvion_y = 0.0f;
-float giroAvion = 0;
-
-#define MAX_FRAMES 30
-int i_max_steps = 90;
-int i_curr_steps = 5;
-typedef struct _frame
-{
-	//Variables para GUARDAR Key Frames
-	float movAvion_x;		//Variable para PosicionX
-	float movAvion_y;		//Variable para PosicionY
-	float movAvion_xInc;		//Variable para IncrementoX
-	float movAvion_yInc;		//Variable para IncrementoY
-	float giroAvion;
-	float giroAvionInc;
-}FRAME;
-
-FRAME KeyFrame[MAX_FRAMES];
-int FrameIndex = 5;			//introducir datos
-bool play = false;
-int playIndex = 0;
-
-void saveFrame(void)
-{
-
-	printf("frameindex %d\n", FrameIndex);
-
-
-	KeyFrame[FrameIndex].movAvion_x = movAvion_x;
-	KeyFrame[FrameIndex].movAvion_y = movAvion_y;
-	KeyFrame[FrameIndex].giroAvion = giroAvion;
-
-	FrameIndex++;
-}
-
-void resetElements(void)
-{
-
-	movAvion_x = KeyFrame[0].movAvion_x;
-	movAvion_y = KeyFrame[0].movAvion_y;
-	giroAvion = KeyFrame[0].giroAvion;
-}
-
-void interpolation(void)
-{
-	KeyFrame[playIndex].movAvion_xInc = (KeyFrame[playIndex + 1].movAvion_x - KeyFrame[playIndex].movAvion_x) / i_max_steps;
-	KeyFrame[playIndex].movAvion_yInc = (KeyFrame[playIndex + 1].movAvion_y - KeyFrame[playIndex].movAvion_y) / i_max_steps;
-	KeyFrame[playIndex].giroAvionInc = (KeyFrame[playIndex + 1].giroAvion - KeyFrame[playIndex].giroAvion) / i_max_steps;
-
-}
-
-
-void animate(void)
-{
-	//Movimiento del objeto
-	if (play)
-	{
-		if (i_curr_steps >= i_max_steps) //end of animation between frames?
-		{
-			playIndex++;
-			printf("playindex : %d\n", playIndex);
-			if (playIndex > FrameIndex - 2)	//end of total animation?
-			{
-				printf("Frame index= %d\n", FrameIndex);
-				printf("termina anim\n");
-				playIndex = 0;
-				play = false;
-			}
-			else //Next frame interpolations
-			{
-				//printf("entro aquí\n");
-				i_curr_steps = 0; //Reset counter
-				//Interpolation
-				interpolation();
-			}
-		}
-		else
-		{
-			//printf("se quedó aqui\n");
-			//printf("max steps: %f", i_max_steps);
-			//Draw animation
-			movAvion_x += KeyFrame[playIndex].movAvion_xInc;
-			movAvion_y += KeyFrame[playIndex].movAvion_yInc;
-			giroAvion += KeyFrame[playIndex].giroAvionInc;
-			i_curr_steps++;
-		}
-
-	}
-}
-
-/* FIN KEYFRAMES*/
 
 //contador de luces puntuales lo declaramos aqui para que podamos prenderlas y apagarlas con el ciclod de los skybox
 unsigned int pointLightCount = 0;
@@ -305,16 +202,31 @@ bool checkTime(std::chrono::steady_clock::time_point start, bool day_state) {
 	{
 		if (day_state)
 		{
-			skybox = Skybox(skyboxNightFaces);
+			//skybox = Skybox(skyboxNightFaces);
 			pointLightCount += 3;//si es de noche encendemos las 3 
 		}
 		else {
-			skybox = Skybox(skyboxDayFaces);
-			pointLightCount = 0;//si es de dia las apagamos 
+			//skybox = Skybox(skyboxDayFaces);
+			pointLightCount = 0;//si es de dia las apagamos
 		}
 		return true;
 	}
 	return false;
+}
+
+void checkForLightThreeshold(SpotLight lights[], glm::vec3 COLORS[], std::chrono::steady_clock::time_point& start) {
+
+	// Revisar el limite de tiempo
+	float diff = getSecondsDiff(start);
+
+	if (diff >= 2) {
+		for (int i = 0; i < 3; i++) {
+			int index = rand() % 3 + 0;
+			lights[i].setColor(COLORS[index].x, COLORS[index].y, COLORS[index].z);
+		}
+	}
+
+	start = std::chrono::high_resolution_clock::now();
 }
 
 
@@ -374,6 +286,9 @@ int main()
 
 	Stage_M = Model();
 	Stage_M.LoadModel("Models/stage_clean.obj");
+	StageLight_M = Model();
+	StageLight_M.LoadModel("Models/stage_light_2.obj");
+
 
 	lampara = Model();
 	lampara.LoadModel("Models/lampara/lampara.obj");
@@ -381,16 +296,6 @@ int main()
 	cartel = Model();
 	cartel.LoadModel("Models/cartel/Anuncion_neon.obj");
 
-
-
-	//Tux_M tux = Tux_M(
-	//	glm::vec3(0.0f),
-	//	"Models/tux/body.obj", // body
-	//	"Models/tux/larm.obj",
-	//	"Models/tux/rarm.obj",
-	//	"Models/tux/lfoot.obj",
-	//	"Models/tux/rfoot.obj"
-	//);
 	Tux_M tux = Tux_M(
 		glm::vec3(0.0f),
 		"Models/tux_v2/Cuerpo.obj", // body
@@ -419,6 +324,20 @@ int main()
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
 
+	glm::vec3 COLORS[4];
+	COLORS[0] = glm::vec3(1.0f, 0.0f, 0.0f);  // RED
+	COLORS[1] = glm::vec3(0.0f, 1.0f, 0.0f);  // GREEN
+	COLORS[2] = glm::vec3(0.0f, 0.0f, 1.0f);  // BLUE
+	COLORS[3] = glm::vec3(1.0f, 1.0f, 0.0f);  // RED + GREEN
+
+	glm::vec2 CIRCLE[4];
+	CIRCLE[0] = glm::vec2(1.0f, 0.0f);
+	CIRCLE[1] = glm::vec2(0.0f, 1.0f);
+	CIRCLE[2] = glm::vec2(-1.0f, 0.0f);
+	CIRCLE[3] = glm::vec2(0.0f, -1.0f);
+
+	float stageRot = 45.0f;
+	int circleIndex = 0;
 
 	//luz direccional, sólo 1 y siempre debe de existir
 	// ### SUN Light ###
@@ -431,62 +350,81 @@ int main()
 	/* TODO: Cada farola tendra un pointLight que debera encender y apagarse*/
 	//float aIntensity = getAttenuationValue(1.0f, 0.014f, 0.0007f, 325.0f);
 
-	//contador de luces puntuales
-	//unsigned int pointLightCount = 0;
+	unsigned int pointLightCount = 0;
 	// Farola de sushi y hotdog
 	pointLights[0] = PointLight(
 		1.0f, 1.0f, 0.4f,	// R G B
 		//1.0f, 0.0f, 0.0f,
-		10.0f, 1.0f,	// AmbientIntenssity / diffuseIntensity
-		100.0f, 2.0f, 140.0f,	// Position
+		100.0f, 1.0f,	// AmbientIntenssity / diffuseIntensity
+		100.0f, 6.0f, 140.0f,	// Position
 		0.5f, 0.7f, 0.1f);	// Contant, linar, exponent
-	//pointLightCount++;
+	pointLightCount++;
 
 	// Farola de italiana y arabe
 	pointLights[1] = PointLight(
 		1.0f, 1.0f, 0.4f,	// R G B
-		//1.0f, 0.0f, 0.0f,
-		10.0f, 1.0f,	// AmbientIntenssity / diffuseIntensity
-		100.0f, 2.0f, -150.0f,	// Position
+		100.0f, 1.0f,	// AmbientIntenssity / diffuseIntensity
+		100.0f, 6.0f, -150.0f,	// Position
 		0.5f, 0.7f, 0.1f);	// Contant, linar, exponent
-	//pointLightCount++;
+	pointLightCount++;
 
 	// Farola de tacos y aguas
 	pointLights[2] = PointLight(
 		1.0f, 1.0f, 0.4f,	// R G B
-		//1.0f, 0.0f, 0.0f,
-		10.0f, 1.0f,	// AmbientIntenssity / diffuseIntensity
-		-100.0f, 2.0f, -60.0f,	// Position
+		100.0f, 1.0f,	// AmbientIntenssity / diffuseIntensity
+		-100.0f, 6.0f, -60.0f,	// Position
 		0.5f, 0.7f, 0.1f);	// Contant, linar, exponent
-	//pointLightCount++;
+	pointLightCount++;
 
 	
 	unsigned int spotLightCount = 0;
-	//linterna
-	/*spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
-		0.0f, 2.0f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		5.0f);
-	spotLightCount++;*/
+	// STAGE LIGHT
+	spotLights[0] = SpotLight(
+		COLORS[0].x, COLORS[0].y, COLORS[0].z,	// R G B
+		1000.0f, 10.0f,							// aIntensity dIntensity
+		0.0f, 50.0f, 0.0f,						// XPos, yPos, zPos
+		0.0f, -1.0f, 0.0f,						// Direction vector
+		1.0f, 0.7f, 0.1f,						// What is this?			
+		50.0f);									// Edge
+	spotLightCount++;
 
-	//luz fija
-	/*spotLights[1] = SpotLight(0.0f, 0.0f, 1.0f,
-		1.0f, 2.0f,
-		5.0f, 10.0f, 0.0f,
-		0.0f, -5.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		15.0f);
-	spotLightCount++;*/
+	spotLights[1] = SpotLight(
+		COLORS[2].x, COLORS[2].y, COLORS[2].z,	// R G B
+		1000.0f, 10.0f,							// aIntensity dIntensity
+		0.0f, 50.0f, 0.0f,						// XPos, yPos, zPos
+		0.0f, -1.0f, 0.0f,						// Direction vector
+		1.0f, 0.7f, 0.1f,						// What is this?			
+		50.0f);									// Edge
+	spotLightCount++;
+
+	spotLights[2] = SpotLight(
+		COLORS[3].x, COLORS[3].y, COLORS[3].z,	// R G B
+		1000.0f, 10.0f,							// aIntensity dIntensity
+		0.0f, 50.0f, 0.0f,						// XPos, yPos, zPos
+		0.0f, -1.0f, 0.0f,						// Direction vector
+		1.0f, 0.7f, 0.1f,						// What is this?			
+		50.0f);									// Edge
+	spotLightCount++;
+
+	/* 
+		- CAMBIAR COLOR CADA 2s
+		- Seguir función senoidal para las rotaciones
+	*/
 
 
-	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
-		uniformSpecularIntensity = 0, uniformShininess = 0, uniformTextureOffset = 0;
+	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0, uniformSpecularIntensity = 0, uniformShininess = 0, uniformTextureOffset = 0;
 	GLuint uniformColor = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)(mainWindow.getBufferWidth() / mainWindow.getBufferHeight()), 0.1f, 1000.0f);
 
 	start_time = std::chrono::high_resolution_clock::now();
+
+	bool prev_day_state = true;
+	bool is_day = true;
+	bool animateStage = false;
+
+	// Stage Lights
+	glm::vec3 l1, l2, l3;
+
 
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
@@ -495,30 +433,56 @@ int main()
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
+		
+		prev_day_state = mainWindow.isDay();
+		
 
-		// Revisar si es de dia o de noche
+		// Revisa3 si es de dia o de noche
 		if (checkTime(start_time, mainWindow.isDay()))
 		{
 			start_time = std::chrono::high_resolution_clock::now();
 			mainWindow.toggleDay();
 		}
 
+		is_day = mainWindow.isDay();
+
 		// ### Day && Night Mode ###
 		if (mainWindow.isDay())
 		{
-			// # Day Mode #
-
 			sunLight.setAmbientIntenssity(0.8f);
+			//skybox = Skybox(skyboxDayFaces);  // NOTE: Enabling this lags the simulation
+
+			if (prev_day_state != is_day) {
+				skybox = Skybox(skyboxDayFaces);
+			}
+
+			// TODO: Solo cambiarlas cuando se hace el cambio de dia a noche
+			// Enable lamps
+			for (auto& light : pointLights) {
+				light.setIntensity(0.0f);
+			}
+
+			
 		}
 		else {
-			// # Night Mode #
-			sunLight.setAmbientIntenssity(0.3f);
+			sunLight.setAmbientIntenssity(0.35f);
+			
+			if (prev_day_state != is_day) {
+				skybox = Skybox(skyboxNightFaces);
+			}
+
+			// Disable lamps
+			for (auto& light : pointLights) {
+				light.setIntensity(100.0f);
+			}
 
 		}
 
+		bool* keys = mainWindow.getsKeys();
+		bool prev_key_nine = keys[GLFW_KEY_9];
 		//Recibir eventos del usuario
 		glfwPollEvents();
-
+		keys = mainWindow.getsKeys();
 		
 		// TODO: Revisar el modo de camara activo (3rd person or isometric)
 		if (mainWindow.getCameraMode()) {
@@ -532,37 +496,52 @@ int main()
 			tux.keyControl(mainWindow.getsKeys(), deltaTime);
 			tux.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 			camera.adjustAeroCamera(tux.getPos(), tux.getDir());
-
-			/*camera.keyControl(mainWindow.getsKeys(), deltaTime);
-			camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());*/
 		}
 
-		bool* keys = mainWindow.getsKeys();
-
 		// ### Luz de las Farolas ###
-		if (keys[GLFW_KEY_V])  // Disable nearest pointlight
+		if (keys[GLFW_KEY_B])  // Disable nearest pointlight
 		{
 			int nearestIndex = getNearestLightIndex(pointLights, pointLightCount, tux.getPos());
-			//printf("Nearest index is: %d\n", nearestIndex);
+			printf("DISABLE LIGHT: Nearest index is: %d\n", nearestIndex);
 
 			if (pointLights[nearestIndex].getIntensity() > 0.0f) {
 				pointLights[nearestIndex].setIntensity(0.0f);
 			}
 		}
 
-		if (keys[GLFW_KEY_B])  // Enable nearest pointlight
+		if (keys[GLFW_KEY_V])  // Enable nearest pointlight
 		{
 			int nearestIndex = getNearestLightIndex(pointLights, pointLightCount, tux.getPos());
-			//printf("Nearest index is: %d\n", nearestIndex);
+			printf("ENABLE LIGHT: Nearest index is: %d\n", nearestIndex);
 
 			if (pointLights[nearestIndex].getIntensity() <= 0.0f) {
 				pointLights[nearestIndex].setIntensity(1.0f);
 			}
 		}
 
+
+		if (keys[GLFW_KEY_9])  // Enable stage animation
+		{
+			
+			if (prev_key_nine != keys[GLFW_KEY_9]) { 
+				animateStage = true;
+				printf("CHANGING STAGE LIGHTS\n");
+			}
+		}
+
+
+		if (keys[GLFW_KEY_8])  // Disable state animation
+		{
+			
+			if (prev_key_nine != keys[GLFW_KEY_8]) {
+				animateStage = false;
+				printf("CHANGING STAGE LIGHTS\n");
+			}
+		}
+
 		// para keyframes
-		inputKeyframes(mainWindow.getsKeys());
-		animate();
+		//inputKeyframes(mainWindow.getsKeys());
+		//animate();
 
 
 		// Clear the window
@@ -613,11 +592,94 @@ int main()
 		pisoMesh->RenderMesh();
 
 		model = glm::mat4(1.0);
+		glm::vec3 stagePos = glm::vec3(5.0f, 30.0f, 220.0f);
 		model = glm::translate(model, glm::vec3(5.0f, -5.0f, 220.0f));
 		model = glm::scale(model, glm::vec3(7.0f, 10.0f, 10.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		Stage_M.RenderModel();
+		
+		if (animateStage) {
+			int index;
+
+			stageRot += 1.0f;
+
+			// Enable Lights
+
+			spotLights[0].setIntensity(100.0);
+			spotLights[1].setIntensity(100.0);
+			spotLights[2].setIntensity(100.0);
+
+			spotLights[0].SetPos(stagePos);
+			spotLights[1].SetPos(stagePos);
+			spotLights[2].SetPos(stagePos);
+
+
+			l1 = glm::vec3(
+				1 * glm::sin(-stageRot * toRadians) * stagePos.x,
+				glm::sin(-stageRot * toRadians) - stagePos.y,
+				1 * glm::cos(stageRot * toRadians) * stagePos.z
+			);
+
+			l2 = glm::vec3(
+				1000 * glm::sin(stageRot * toRadians) * stagePos.x + 50,
+				glm::sin(stageRot * toRadians) - stagePos.y,
+				glm::cos(stageRot * toRadians) * stagePos.z + 50
+			);
+
+			l3 = glm::vec3(
+				500 * glm::sin(-stageRot * toRadians) * stagePos.x - 75,
+				glm::sin(-stageRot * toRadians) - stagePos.y,
+				glm::cos(-stageRot * toRadians) * stagePos.z - 75
+			);
+
+			l1 = glm::normalize(l1);
+			l2 = glm::normalize(l2);
+			l3 = glm::normalize(l3);
+
+			spotLights[0].setDirection(l1);
+			spotLights[1].setDirection(l2);
+			spotLights[2].setDirection(l3);
+
+			for (auto& light : spotLights) {
+				index = rand() % 3 + 0;
+				// TODO: Check if color is asssigned already, if it is, choose another one 
+
+				light.setColor(COLORS[index].x, COLORS[index].y, COLORS[index].z);
+				
+			}
+		}
+		else {
+			// Turn off the lights!
+			spotLights[0].setIntensity(0);
+			spotLights[1].setIntensity(0);
+			spotLights[2].setIntensity(0);
+		}
+
+
+
+		// Light 1
+		glm::mat4 aux = model;
+		model = glm::rotate(model, stageRot * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		StageLight_M.RenderModel();
+
+		// Light 2
+		//model = glm::mat4(1.0);
+		aux = model;
+		model = glm::translate(model, glm::vec3(1.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, stageRot * toRadians + 50, glm::vec3(0.0f, 1.0f, 0.0f));
+		//model = glm::scale(model, glm::vec3(100.0f, 100.f, 100.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		StageLight_M.RenderModel();
+
+		// Light 3
+		model = aux;
+		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, stageRot * toRadians + 10, glm::vec3(0.0f, 1.0f, 0.0f));
+		//model = glm::scale(model, glm::vec3(100.0f, 100.f, 100.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		StageLight_M.RenderModel();
 
 		/*model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-150.0f, -5.0f, -600.0f));
@@ -858,25 +920,18 @@ int main()
 		tux.move(uniformModel);
 
 		// Carteles
-		//textura con movimiento
-		//Importantes porque la variable uniform no podemos modificarla directamente
 		toffsetu += 0.001;
 		toffsetv += 0.0;
-		//para que no se desborde la variable
+
 		if (toffsetu > 1.0)
 			toffsetu = 0.0;
-		//if (toffsetv > 1.0)
-		//	toffsetv = 0;
-		//printf("\ntfosset %f \n", toffsetu);
 
-		//pasar a la variable uniform el valor actualizado
 		toffset = glm::vec2(toffsetu, toffsetv);
+
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-97.8f, 26.0f, -179.5f));
-
 		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, 90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-
 		model = glm::scale(model, glm::vec3(20.0f, 13.0f, 7.0f));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -885,12 +940,9 @@ int main()
 
 		// Cartel FoodTrucks
 		model = glm::mat4(1.0);
-		//model = glm::translate(model, glm::vec3(100.0f, 0.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(95.0f, 26.0f, 0.0f));
-
 		model = glm::rotate(model, -90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, 90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
-
 		model = glm::scale(model, glm::vec3(20.0f, 13.0f, 7.0f));
 		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -903,81 +955,4 @@ int main()
 	}
 
 	return 0;
-}
-
-void inputKeyframes(bool* keys)
-{
-	if (keys[GLFW_KEY_SPACE])
-	{
-		if (reproduciranimacion < 1)
-		{
-			if (play == false && (FrameIndex > 1))
-			{
-				resetElements();
-				//First Interpolation				
-				interpolation();
-				play = true;
-				playIndex = 0;
-				i_curr_steps = 0;
-				reproduciranimacion++;
-				printf("\n presiona 0 para habilitar reproducir de nuevo la animación'\n");
-				habilitaranimacion = 0;
-
-			}
-			else
-			{
-				play = false;
-			}
-		}
-	}
-	if (keys[GLFW_KEY_0])
-	{
-		if (habilitaranimacion < 1)
-		{
-			reproduciranimacion = 0;
-		}
-	}
-
-	if (keys[GLFW_KEY_L])
-	{
-		if (guardoFrame < 1)
-		{
-			saveFrame();
-			printf("movAvion_x es: %f\n", movAvion_x);
-			//printf("movAvion_y es: %f\n", movAvion_y);
-			printf(" \npresiona P para habilitar guardar otro frame'\n");
-			guardoFrame++;
-			reinicioFrame = 0;
-		}
-	}
-	if (keys[GLFW_KEY_P])
-	{
-		if (reinicioFrame < 1)
-		{
-			guardoFrame = 0;
-		}
-	}
-
-
-	if (keys[GLFW_KEY_1])
-	{
-		if (ciclo < 1)
-		{
-			//printf("movAvion_x es: %f\n", movAvion_x);
-			movAvion_x += 1.0f;
-			printf("\n movAvion_x es: %f\n", movAvion_x);
-			ciclo++;
-			ciclo2 = 0;
-			printf("\n reinicia con 2\n");
-		}
-
-	}
-	if (keys[GLFW_KEY_2])
-	{
-		if (ciclo2 < 1)
-		{
-			ciclo = 0;
-		}
-	}
-
 }
