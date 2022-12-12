@@ -1,15 +1,16 @@
 ﻿  main.cpp
-C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(13,10): warning C4067: símbolos (token) inesperados después de la directiva del preprocesador; se esperaba una nueva línea
-C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\addons.h(10,22): warning C4244: 'return': conversión de '_Rep' a 'int'; posible pérdida de datos
+C:\Users\Erik\Desktop\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(13,10): warning C4067: símbolos (token) inesperados después de la directiva del preprocesador; se esperaba una nueva línea
+C:\Users\Erik\Desktop\Campo-de-comida-nacional-internacional\ProyectoLab\addons.h(10,22): warning C4244: 'return': conversión de '_Rep' a 'int'; posible pérdida de datos
           with
           [
               _Rep=double
           ]
-C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\addons.h(15,13): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
-C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
-C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(303,13): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(583,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(585,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(985,20): warning C4305: '+=': truncamiento de 'double' a 'float'
-  ProyectoLab.vcxproj -> C:\Users\PC\Documents\proyecto_CG_git\Campo-de-comida-nacional-internacional\Debug\ProyectoLab.exe
+C:\Users\Erik\Desktop\Campo-de-comida-nacional-internacional\ProyectoLab\addons.h(15,13): warning C4244: 'return': conversión de 'double' a 'float'; posible pérdida de datos
+C:\Users\Erik\Desktop\Campo-de-comida-nacional-internacional\ProyectoLab\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+C:\Users\Erik\Desktop\Campo-de-comida-nacional-internacional\ProyectoLab\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+C:\Users\Erik\Desktop\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(300,13): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Erik\Desktop\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(322,13): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Erik\Desktop\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(626,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\Erik\Desktop\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(628,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\Erik\Desktop\Campo-de-comida-nacional-internacional\ProyectoLab\main.cpp(1147,20): warning C4305: '+=': truncamiento de 'double' a 'float'
+  ProyectoLab.vcxproj -> C:\Users\Erik\Desktop\Campo-de-comida-nacional-internacional\Debug\ProyectoLab.exe

@@ -51,6 +51,14 @@ void SpotLight::SetPos(glm::vec3 pos)
 	position = pos;
 }
 
+void SpotLight::setDirection(glm::vec3 nDir) {
+	direction = nDir;
+}
+
+void SpotLight::setColor(GLfloat R, GLfloat G, GLfloat B) {
+	color = glm::vec3(R, G, B);
+}
+
 //Funcion para colocar la intensidad de luminosidad
 void SpotLight::SetIntensity(GLfloat intensidad)
 {
