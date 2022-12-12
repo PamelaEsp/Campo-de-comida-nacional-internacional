@@ -100,6 +100,8 @@ Model mesa;
 Model banio;
 Model lampara;
 Model cartel;
+Model botes;
+Model tamales;
 
 Model Stage_M;
 
@@ -200,26 +202,26 @@ bool animacion = false;
 
 
 //NEW// Keyframes
-float posXavion = 2.0, posYavion = 5.0, posZavion = -3.0;
-float	movAvion_x = 0.0f, movAvion_y = 0.0f;
-float giroAvion = 0;
+float posXtamales = 100.0, posYtamales = 0.0, posZtamales = -350.0;
+float	movtamales_x = 0.0f, movtamales_z = 0.0f;
+float giroTamales = 0;
 
 #define MAX_FRAMES 30
 int i_max_steps = 90;
-int i_curr_steps = 5;
+int i_curr_steps = 14;
 typedef struct _frame
 {
 	//Variables para GUARDAR Key Frames
-	float movAvion_x;		//Variable para PosicionX
-	float movAvion_y;		//Variable para PosicionY
-	float movAvion_xInc;		//Variable para IncrementoX
-	float movAvion_yInc;		//Variable para IncrementoY
-	float giroAvion;
-	float giroAvionInc;
+	float movTamales_x;		//Variable para PosicionX
+	float movTamales_z;		//Variable para PosicionY
+	float movTamales_xInc;		//Variable para IncrementoX
+	float movTamales_zInc;		//Variable para IncrementoY
+	float giroTamales;
+	float giroTamalesInc;
 }FRAME;
 
 FRAME KeyFrame[MAX_FRAMES];
-int FrameIndex = 5;			//introducir datos
+int FrameIndex = 14;			//introducir datos
 bool play = false;
 int playIndex = 0;
 
@@ -229,9 +231,9 @@ void saveFrame(void)
 	printf("frameindex %d\n", FrameIndex);
 
 
-	KeyFrame[FrameIndex].movAvion_x = movAvion_x;
-	KeyFrame[FrameIndex].movAvion_y = movAvion_y;
-	KeyFrame[FrameIndex].giroAvion = giroAvion;
+	KeyFrame[FrameIndex].movTamales_x = movtamales_x;
+	KeyFrame[FrameIndex].movTamales_z = movtamales_z;
+	KeyFrame[FrameIndex].giroTamales = giroTamales;
 
 	FrameIndex++;
 }
@@ -239,16 +241,16 @@ void saveFrame(void)
 void resetElements(void)
 {
 
-	movAvion_x = KeyFrame[0].movAvion_x;
-	movAvion_y = KeyFrame[0].movAvion_y;
-	giroAvion = KeyFrame[0].giroAvion;
+	movtamales_x = KeyFrame[0].movTamales_x;
+	movtamales_z = KeyFrame[0].movTamales_z;
+	giroTamales = KeyFrame[0].giroTamales;
 }
 
 void interpolation(void)
 {
-	KeyFrame[playIndex].movAvion_xInc = (KeyFrame[playIndex + 1].movAvion_x - KeyFrame[playIndex].movAvion_x) / i_max_steps;
-	KeyFrame[playIndex].movAvion_yInc = (KeyFrame[playIndex + 1].movAvion_y - KeyFrame[playIndex].movAvion_y) / i_max_steps;
-	KeyFrame[playIndex].giroAvionInc = (KeyFrame[playIndex + 1].giroAvion - KeyFrame[playIndex].giroAvion) / i_max_steps;
+	KeyFrame[playIndex].movTamales_xInc = (KeyFrame[playIndex + 1].movTamales_x - KeyFrame[playIndex].movTamales_x) / i_max_steps;
+	KeyFrame[playIndex].movTamales_zInc = (KeyFrame[playIndex + 1].movTamales_z - KeyFrame[playIndex].movTamales_z) / i_max_steps;
+	KeyFrame[playIndex].giroTamalesInc = (KeyFrame[playIndex + 1].giroTamales - KeyFrame[playIndex].giroTamales) / i_max_steps;
 
 }
 
@@ -282,9 +284,9 @@ void animate(void)
 			//printf("se quedó aqui\n");
 			//printf("max steps: %f", i_max_steps);
 			//Draw animation
-			movAvion_x += KeyFrame[playIndex].movAvion_xInc;
-			movAvion_y += KeyFrame[playIndex].movAvion_yInc;
-			giroAvion += KeyFrame[playIndex].giroAvionInc;
+			movtamales_x += KeyFrame[playIndex].movTamales_xInc;
+			movtamales_z += KeyFrame[playIndex].movTamales_zInc;
+			giroTamales += KeyFrame[playIndex].giroTamalesInc;
 			i_curr_steps++;
 		}
 
@@ -381,8 +383,11 @@ int main()
 	cartel = Model();
 	cartel.LoadModel("Models/cartel/Anuncion_neon.obj");
 
+	botes = Model();
+	botes.LoadModel("Models/bote_Basura/trashcan1.obj");
 
-
+	tamales = Model();
+	tamales.LoadModel("Models/carrito/carrito.obj");
 	//Tux_M tux = Tux_M(
 	//	glm::vec3(0.0f),
 	//	"Models/tux/body.obj", // body
@@ -487,7 +492,62 @@ int main()
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)(mainWindow.getBufferWidth() / mainWindow.getBufferHeight()), 0.1f, 1000.0f);
 
 	start_time = std::chrono::high_resolution_clock::now();
+	//******************************************FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF******************************************/
+	glm::vec3 posblackhawk = glm::vec3(2.0f, 0.0f, 0.0f);  //VARIABLE MAT PARA DECLARA DATOS DE X,Y,Z INICILES PARA EL AVION 
+	//KEYFRAMES DECLARADOS INICIALES
 
+	KeyFrame[0].movTamales_x = -10.0f;
+	KeyFrame[0].movTamales_z = 0.0f;
+	KeyFrame[0].giroTamales = 90;
+
+	KeyFrame[1].movTamales_x = -10.0f;
+	KeyFrame[1].movTamales_z = 200.0f;
+	KeyFrame[1].giroTamales = 90;
+
+	KeyFrame[2].movTamales_x = -10.0f;
+	KeyFrame[2].movTamales_z = 400.0f;
+	KeyFrame[2].giroTamales = 90;
+
+	KeyFrame[3].movTamales_x = -50.0f;
+	KeyFrame[3].movTamales_z = 400.0f;
+	KeyFrame[3].giroTamales = 0;
+
+	KeyFrame[4].movTamales_x = -100.0f;
+	KeyFrame[4].movTamales_z = 400.0f;
+	KeyFrame[4].giroTamales = 0;
+
+	KeyFrame[5].movTamales_x = -175.0f;
+	KeyFrame[5].movTamales_z = 400.0f;
+	KeyFrame[5].giroTamales = 0;
+
+	KeyFrame[6].movTamales_x = -175.0f;
+	KeyFrame[6].movTamales_z = 400.0f;
+	KeyFrame[6].giroTamales = -90;
+
+	KeyFrame[7].movTamales_x = -175.0f;
+	KeyFrame[7].movTamales_z = 200.0f;
+	KeyFrame[7].giroTamales = -90;
+
+	KeyFrame[8].movTamales_x = -175.0f;
+	KeyFrame[8].movTamales_z = -25.0f;
+	KeyFrame[8].giroTamales = -90;
+
+	KeyFrame[9].movTamales_x = -175.0f;
+	KeyFrame[9].movTamales_z = -10.0f;
+	KeyFrame[9].giroTamales = -180;
+	//
+	KeyFrame[10].movTamales_x = 20.0f;
+	KeyFrame[10].movTamales_z = -1.0f;
+	KeyFrame[10].giroTamales = -180;
+
+	KeyFrame[11].movTamales_x = 20.0f;
+	KeyFrame[11].movTamales_z = -1.0f;
+	KeyFrame[11].giroTamales = -180;
+
+
+
+	
+	//******************************************FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF*****************
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
 	{
@@ -759,25 +819,42 @@ int main()
 
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-100.0f, 0.0f, -350.0f));
+		model = glm::translate(model, glm::vec3(-100.0f, 0.0f, -370.0f));
 		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		banio.RenderModel();
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-50.0f, 0.0f, -350.0f));
+		model = glm::translate(model, glm::vec3(-50.0f, 0.0f, -370.0f));
 		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		banio.RenderModel();
 
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -350.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -370.0f));
 		model = glm::scale(model, glm::vec3(10.0f, 12.0f, 10.0f));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		banio.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(25.0f, 10.0f, -400.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		botes.RenderModel();
+
+		model = glm::mat4(1.0);
+		posblackhawk = glm::vec3(posXtamales + movtamales_x, posYtamales , posZtamales + movtamales_z); //POS INICIAL+VALOR DE LA ANIMACION
+		model = glm::translate(model, posblackhawk);
+		model = glm::scale(model, glm::vec3(6.0f, 10.0f, 8.0f));
+		model = glm::rotate(model, giroTamales * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		tamales.RenderModel();
+
 
 		//-----------------------------------------------------------------------Modelos de laparas----------------------
 		//Lado de food trucks
@@ -943,7 +1020,7 @@ void inputKeyframes(bool* keys)
 		if (guardoFrame < 1)
 		{
 			saveFrame();
-			printf("movAvion_x es: %f\n", movAvion_x);
+			printf("movAvion_x es: %f\n", movtamales_x);
 			//printf("movAvion_y es: %f\n", movAvion_y);
 			printf(" \npresiona P para habilitar guardar otro frame'\n");
 			guardoFrame++;
@@ -964,8 +1041,8 @@ void inputKeyframes(bool* keys)
 		if (ciclo < 1)
 		{
 			//printf("movAvion_x es: %f\n", movAvion_x);
-			movAvion_x += 1.0f;
-			printf("\n movAvion_x es: %f\n", movAvion_x);
+			movtamales_x += 1.0f;
+			printf("\n movAvion_x es: %f\n", movtamales_x);
 			ciclo++;
 			ciclo2 = 0;
 			printf("\n reinicia con 2\n");
