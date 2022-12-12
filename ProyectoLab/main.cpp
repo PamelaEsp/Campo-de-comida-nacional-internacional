@@ -1,9 +1,9 @@
-/*
+ï»¿/*
 Semestre 2023-1
-Animación:
-1.- Simple o básica:Por banderas y condicionales
+AnimaciÃ³n:
+1.- Simple o bÃ¡sica:Por banderas y condicionales
 2.- Compleja: Por medio de funciones y algoritmos,Textura Animada.
-4.- Técnicas de Animación: Por Keyframes
+4.- TÃ©cnicas de AnimaciÃ³n: Por Keyframes
 */
 //para cargar imagen
 #define STB_IMAGE_IMPLEMENTATION
@@ -38,7 +38,7 @@ Animación:
 #include "Model.h"
 #include "Skybox.h"
 
-//para iluminación
+//para iluminaciÃ³n
 #include "CommonValues.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
@@ -53,7 +53,7 @@ std::chrono::steady_clock::time_point start_time;
 
 
 
-//variables para animación
+//variables para animaciÃ³n
 float movCoche;
 float movOffset;
 float rotllanta;
@@ -273,7 +273,7 @@ void animate(void)
 			}
 			else //Next frame interpolations
 			{
-				//printf("entro aquí\n");
+				//printf("entro aquÃ­\n");
 				i_curr_steps = 0; //Reset counter
 				//Interpolation
 				interpolation();
@@ -281,7 +281,7 @@ void animate(void)
 		}
 		else
 		{
-			//printf("se quedó aqui\n");
+			//printf("se quedÃ³ aqui\n");
 			//printf("max steps: %f", i_max_steps);
 			//Draw animation
 			movtamales_x += KeyFrame[playIndex].movTamales_xInc;
@@ -299,7 +299,7 @@ void animate(void)
 unsigned int pointLightCount = 0;
 
 bool checkTime(std::chrono::steady_clock::time_point start, bool day_state) {
-	// Revisamos si el número de segundos ya supero el limite
+	// Revisamos si el nÃºmero de segundos ya supero el limite
 	float diff = getSecondsDiff(start);
 	//printf("The diff is %i\n", diff);
 
@@ -425,7 +425,7 @@ int main()
 	Material_opaco = Material(0.3f, 4);
 
 
-	//luz direccional, sólo 1 y siempre debe de existir
+	//luz direccional, sÃ³lo 1 y siempre debe de existir
 	// ### SUN Light ###
 	sunLight = DirectionalLight(
 		1.0f, 1.0f, 1.0f,	// COLOR
@@ -467,14 +467,43 @@ int main()
 
 	
 	unsigned int spotLightCount = 0;
-	//linterna
-	/*spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
-		0.0f, 2.0f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		5.0f);
-	spotLightCount++;*/
+
+	//PUESTO DE TORTAS
+	spotLights[0] = SpotLight(1.0f, 0.5f, 0.0f,//color de la luz
+		50.0f, 1.0f, //En esta si es importante el segundo valor porque nos da la intesidad de la luz  el primero no importa
+		-120.0f, 40.0f, 150.0f,//Poscion, 
+		10.0f, -1.0f, 0.0f,//Valores de direccion 
+		0.5f, 0.7f, 0.1f,//valores de la ecuacion de segundo grado, no puede dar 0 este es que tanto se agranda o hace pequeï¿½a la luz
+		200.0f);//Apertura de cono
+	spotLightCount++;
+
+	//PUESTO DE HOTDOGS
+	spotLights[1] = SpotLight(1.0f, 0.5f, 0.0f,//color de la luz
+		50.0f, 1.0f, //En esta si es importante el segundo valor porque nos da la intesidad de la luz  el primero no importa
+		120.0f, 40.0f, 50.0f,//Poscion, 
+		10.0f, -1.0f, 0.0f,//Valores de direccion 
+		0.5f, 0.7f, 0.1f,//valores de la ecuacion de segundo grado, no puede dar 0 este es que tanto se agranda o hace pequeï¿½a la luz
+		200.0f);//Apertura de cono
+	spotLightCount++;
+
+	//PUESTO ITALIANO
+	spotLights[2] = SpotLight(1.0f, 0.5f, 0.0f,//color de la luz
+		50.0f, 1.0f, //En esta si es importante el segundo valor porque nos da la intesidad de la luz  el primero no importa
+		120.0f, 40.0f, -80.0f,//Poscion, 
+		10.0f, -1.0f, 0.0f,//Valores de direccion 
+		0.5f, 0.7f, 0.1f,//valores de la ecuacion de segundo grado, no puede dar 0 este es que tanto se agranda o hace pequeï¿½a la luz
+		200.0f);//Apertura de cono
+	spotLightCount++;
+
+	//PUESTO ARABE
+	spotLights[3] = SpotLight(1.0f, 0.5f, 0.0f,//color de la luz
+		50.0f, 1.0f, //En esta si es importante el segundo valor porque nos da la intesidad de la luz  el primero no importa
+		120.0f, 30.0f, -240.0f,//Poscion, 
+		10.0f, -1.0f, 0.0f,//Valores de direccion 
+		0.5f, 0.7f, 0.1f,//valores de la ecuacion de segundo grado, no puede dar 0 este es que tanto se agranda o hace pequeï¿½a la luz
+		200.0f);//Apertura de cono
+	spotLightCount++;
+
 
 	//luz fija
 	/*spotLights[1] = SpotLight(0.0f, 0.0f, 1.0f,
@@ -555,6 +584,22 @@ int main()
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
+
+		
+		//PARA EL ENCENDIDO / APAGADO DE LUCES TIPO SPOTLIGTH
+		//spotLights[0].SetIntensity(mainWindow.EnciendeApagaLuces());//Agregando el valor de la intensidad
+		spotLights[0].SetIntensity(mainWindow.EnciendeApagaLucesdifusa());
+		spotLights[0].SetAmbientIntensity(mainWindow.EnciendeApagaLucesAmbiente());
+
+		spotLights[1].SetIntensity(mainWindow.EnciendeApagaLucesdifusa());
+		spotLights[1].SetAmbientIntensity(mainWindow.EnciendeApagaLucesAmbiente());
+
+		spotLights[2].SetIntensity(mainWindow.EnciendeApagaLucesdifusa());
+		spotLights[2].SetAmbientIntensity(mainWindow.EnciendeApagaLucesAmbiente());
+
+		spotLights[3].SetIntensity(mainWindow.EnciendeApagaLucesdifusa());
+		spotLights[3].SetAmbientIntensity(mainWindow.EnciendeApagaLucesAmbiente());
+
 
 		// Revisar si es de dia o de noche
 		if (checkTime(start_time, mainWindow.isDay()))
@@ -637,7 +682,7 @@ int main()
 		uniformColor = shaderList[0].getColorLocation();
 		uniformTextureOffset = shaderList[0].getOffsetLocation();
 
-		//información en el shader de intensidad especular y brillo
+		//informaciÃ³n en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 		uniformShininess = shaderList[0].GetShininessLocation();
 
@@ -645,7 +690,7 @@ int main()
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
-		//información al shader de fuentes de iluminación
+		//informaciÃ³n al shader de fuentes de iluminaciÃ³n
 		shaderList[0].SetDirectionalLight(&sunLight);
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
@@ -904,7 +949,7 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		lampara.RenderModel();
 
-		//Entre púesto de aguas y garnchas
+		//Entre pÃºesto de aguas y garnchas
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-130.0f, 0.0f, -200.0f));
 		model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
@@ -914,7 +959,7 @@ int main()
 		lampara.RenderModel();
 
 		//-------------------------------------PARA CARTELES
-		//Entre púesto de aguas y garnchas
+		//Entre pÃºesto de aguas y garnchas
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-100.0f, 0.0f, -180.0f));
 		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
@@ -997,7 +1042,7 @@ void inputKeyframes(bool* keys)
 				playIndex = 0;
 				i_curr_steps = 0;
 				reproduciranimacion++;
-				printf("\n presiona 0 para habilitar reproducir de nuevo la animación'\n");
+				printf("\n presiona 0 para habilitar reproducir de nuevo la animaciÃ³n'\n");
 				habilitaranimacion = 0;
 
 			}

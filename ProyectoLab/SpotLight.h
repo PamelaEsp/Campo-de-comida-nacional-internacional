@@ -21,6 +21,7 @@ public:
 	void SetFlash(glm::vec3 pos, glm::vec3 dir);
 	void SetPos(glm::vec3 pos);
 	void SetIntensity(GLfloat intensidad);
+	void SetAmbientIntensity(GLfloat intensidadAmbiente);
 	~SpotLight();
 
 private:

@@ -14,6 +14,11 @@ public:
 	GLfloat getXChange();
 	GLfloat getYChange();
 	GLfloat getmuevex() { return muevex; }
+
+	//Para apagado encendido de luces
+	GLfloat EnciendeApagaLucesdifusa() { return enciendeLucesDifusa; }
+	GLfloat EnciendeApagaLucesAmbiente() { return enciendeLucesAmbiente; }
+
 	bool getShouldClose() {
 		return  glfwWindowShouldClose(mainWindow);}
 	bool* getsKeys() { return keys; }
@@ -40,6 +45,10 @@ private:
 	GLfloat xChange;
 	GLfloat yChange;
 	GLfloat muevex;
+
+	//Para encendido de luces por teclado 
+	GLfloat enciendeLucesDifusa;
+	GLfloat enciendeLucesAmbiente;
 
 	bool day_state;
 	bool camera_mode; // true: 3rd person, false: isometric mode
